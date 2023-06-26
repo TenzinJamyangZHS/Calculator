@@ -29,6 +29,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.25" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_3_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_3_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.55" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_4"
@@ -292,7 +304,7 @@
         android:layout_margin="@dimen/margin_big"
         android:background="@drawable/background_number_rp"
         app:layout_constraintBottom_toTopOf="@id/button_four"
-        app:layout_constraintEnd_toStartOf="@id/button_eight"
+        app:layout_constraintEnd_toStartOf="@id/guideline_3_1"
         app:layout_constraintStart_toEndOf="@id/guideline_3"
         app:layout_constraintTop_toBottomOf="@id/guideline_2"/>
     <Button
@@ -304,8 +316,8 @@
         android:layout_margin="@dimen/margin_big"
         android:background="@drawable/background_number_rp"
         app:layout_constraintBottom_toTopOf="@id/button_five"
-        app:layout_constraintEnd_toStartOf="@id/button_nine"
-        app:layout_constraintStart_toEndOf="@id/button_seven"
+        app:layout_constraintEnd_toStartOf="@id/guideline_3_2"
+        app:layout_constraintStart_toEndOf="@id/guideline_3_1"
         app:layout_constraintTop_toBottomOf="@id/guideline_2"/>
     <Button
         android:id="@+id/button_nine"
@@ -317,7 +329,7 @@
         android:background="@drawable/background_number_rp"
         app:layout_constraintBottom_toTopOf="@id/button_six"
         app:layout_constraintEnd_toStartOf="@id/guideline_4"
-        app:layout_constraintStart_toEndOf="@id/button_eight"
+        app:layout_constraintStart_toEndOf="@id/guideline_3_2"
         app:layout_constraintTop_toBottomOf="@id/guideline_2"/>
     <Button
         android:id="@+id/button_mulitply"
@@ -340,7 +352,7 @@
         android:background="@drawable/background_number_rp"
         android:layout_margin="@dimen/margin_big"
         app:layout_constraintBottom_toTopOf="@id/button_one"
-        app:layout_constraintEnd_toStartOf="@id/button_five"
+        app:layout_constraintEnd_toStartOf="@id/guideline_3_1"
         app:layout_constraintStart_toEndOf="@id/guideline_3"
         app:layout_constraintTop_toBottomOf="@id/button_seven"/>
     <Button
@@ -352,8 +364,8 @@
         android:background="@drawable/background_number_rp"
         android:layout_margin="@dimen/margin_big"
         app:layout_constraintBottom_toTopOf="@id/button_two"
-        app:layout_constraintEnd_toStartOf="@id/button_six"
-        app:layout_constraintStart_toEndOf="@id/button_four"
+        app:layout_constraintEnd_toStartOf="@id/guideline_3_2"
+        app:layout_constraintStart_toEndOf="@id/guideline_3_1"
         app:layout_constraintTop_toBottomOf="@id/button_eight"/>
     <Button
         android:id="@+id/button_six"
@@ -365,7 +377,7 @@
         android:layout_margin="@dimen/margin_big"
         app:layout_constraintBottom_toTopOf="@id/button_three"
         app:layout_constraintEnd_toStartOf="@id/guideline_4"
-        app:layout_constraintStart_toEndOf="@id/button_five"
+        app:layout_constraintStart_toEndOf="@id/guideline_3_2"
         app:layout_constraintTop_toBottomOf="@id/button_nine"/>
     <Button
         android:id="@+id/button_minus"
@@ -388,7 +400,7 @@
         android:layout_height="0dp"
         android:layout_margin="@dimen/margin_big"
         app:layout_constraintBottom_toTopOf="@id/button_zero"
-        app:layout_constraintEnd_toStartOf="@id/button_two"
+        app:layout_constraintEnd_toStartOf="@id/guideline_3_1"
         app:layout_constraintStart_toEndOf="@id/guideline_3"
         app:layout_constraintTop_toBottomOf="@id/button_four"/>
     <Button
@@ -400,8 +412,8 @@
         android:background="@drawable/background_number_rp"
         android:layout_margin="@dimen/margin_big"
         app:layout_constraintBottom_toTopOf="@id/button_point"
-        app:layout_constraintEnd_toStartOf="@id/button_three"
-        app:layout_constraintStart_toEndOf="@id/button_one"
+        app:layout_constraintEnd_toStartOf="@id/guideline_3_2"
+        app:layout_constraintStart_toEndOf="@id/guideline_3_1"
         app:layout_constraintTop_toBottomOf="@id/button_five"/>
     <Button
         android:id="@+id/button_three"
@@ -413,7 +425,7 @@
         android:background="@drawable/background_number_rp"
         app:layout_constraintBottom_toTopOf="@id/button_delete"
         app:layout_constraintEnd_toStartOf="@id/guideline_4"
-        app:layout_constraintStart_toEndOf="@id/button_two"
+        app:layout_constraintStart_toEndOf="@id/guideline_3_2"
         app:layout_constraintTop_toBottomOf="@id/button_six"/>
     <Button
         android:id="@+id/button_plus"
@@ -436,7 +448,7 @@
         android:background="@drawable/background_number_rp"
         android:layout_margin="@dimen/margin_big"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_point"
+        app:layout_constraintEnd_toStartOf="@id/guideline_3_1"
         app:layout_constraintStart_toEndOf="@id/guideline_3"
         app:layout_constraintTop_toBottomOf="@id/button_one"/>
     <Button
@@ -448,8 +460,8 @@
         android:textColor="?attr/textcolor_calculator"
         android:background="@drawable/background_number_rp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_delete"
-        app:layout_constraintStart_toEndOf="@id/button_zero"
+        app:layout_constraintEnd_toStartOf="@id/guideline_3_2"
+        app:layout_constraintStart_toEndOf="@id/guideline_3_1"
         app:layout_constraintTop_toBottomOf="@id/button_two"/>
     <Button
         android:id="@+id/button_delete"
@@ -460,8 +472,8 @@
         android:background="@drawable/background_number_rp"
         android:layout_margin="@dimen/margin_big"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_plus"
-        app:layout_constraintStart_toEndOf="@id/button_point"
+        app:layout_constraintEnd_toStartOf="@id/guideline_4"
+        app:layout_constraintStart_toEndOf="@id/guideline_3_2"
         app:layout_constraintTop_toBottomOf="@id/button_three"/>
     <Button
         android:id="@+id/button_equals"
