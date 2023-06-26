@@ -72,7 +72,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onClick(View v) {//重新设置guideline位置以显示或隐藏更多的按键
                     if (!mShowFlag) {
-                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.41f, 0.49f);
+                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.41f, 0.47f);
                         valueAnimator.setDuration(200);
                         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
                         valueAnimator.addUpdateListener(animation -> {
@@ -84,7 +84,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                         mOperatorRow2.setVisibility(View.VISIBLE);
                         mShowFlag = true;
                     } else {
-                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.49f, 0.41f);
+                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.47f, 0.41f);
                         valueAnimator.setDuration(200);
                         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
                         valueAnimator.addUpdateListener(animation -> {
