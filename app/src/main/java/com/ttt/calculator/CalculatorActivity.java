@@ -497,10 +497,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                             if (indexFirst == 0) {
                                 if (mInputText.charAt(indexFirst) != '.') {
                                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                                    updateResultView();
                                 }
                             } else {
                                 if (mInputText.charAt(indexFirst) != '.' && indexFirst != mCursorPosition - 1) {
                                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                                    updateResultView();
                                 }
                             }
 
@@ -520,21 +522,25 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                             if (indexFirst == 0 && indexSecond == mInputText.length() - 1) {
                                 if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
                                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                                    updateResultView();
                                 }
                             } else if (indexFirst == 0 && indexSecond != mInputText.length() - 1) {
                                 if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
                                         && indexSecond != mCursorPosition) {
                                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                                    updateResultView();
                                 }
                             } else if (indexFirst != 0 && indexSecond == mInputText.length() - 1
                                     && indexFirst != mCursorPosition - 1) {
                                 if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
                                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                                    updateResultView();
                                 }
                             } else {
                                 if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
                                         && indexFirst != mCursorPosition - 1 && indexSecond != mCursorPosition) {
                                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                                    updateResultView();
                                 }
                             }
 
