@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/margin_small"
     android:fitsSystemWindows="true"
-    android:background="?attr/backgroud_calculator"
+    android:background="?attr/background_calculator"
     tools:context=".CalculatorActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -68,7 +68,7 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:scrollbars="none"
-        android:background="?attr/backgroud_edit"
+        android:background="?attr/background_edit"
         app:layout_constraintBottom_toTopOf="@id/guideline_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

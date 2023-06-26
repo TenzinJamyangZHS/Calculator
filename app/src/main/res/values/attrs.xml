@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="backgroud_calculator" format="color"/>
-    <attr name="backgroud_edit" format="color"/>
-    <attr name="backgroud_number" format="color"/>
-    <attr name="backgroud_number_pressed" format="color"/>
-    <attr name="backgroud_clear" format="color"/>
-    <attr name="backgroud_clear_pressed" format="color"/>
-    <attr name="backgroud_equals" format="color"/>
-    <attr name="backgroud_equals_pressed" format="color"/>
-    <attr name="backgroud_operator" format="color"/>
-    <attr name="backgroud_operator_pressed" format="color"/>
-    <attr name="backgroud_operator_small_pressed" format="color"/>
+    <attr name="background_calculator" format="color"/>
+    <attr name="background_edit" format="color"/>
+    <attr name="background_number" format="color"/>
+    <attr name="background_number_pressed" format="color"/>
+    <attr name="background_clear" format="color"/>
+    <attr name="background_clear_pressed" format="color"/>
+    <attr name="background_equals" format="color"/>
+    <attr name="background_equals_pressed" format="color"/>
+    <attr name="background_operator" format="color"/>
+    <attr name="background_operator_pressed" format="color"/>
+    <attr name="background_operator_small_pressed" format="color"/>
     <attr name="textcolor_calculator" format="color"/>
 </resources>

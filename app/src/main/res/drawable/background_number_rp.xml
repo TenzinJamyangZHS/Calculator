@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="?attr/backgroud_number_pressed">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="?attr/background_number_pressed">
 
     <item android:id="@android:id/button1" android:drawable="@drawable/background_number"/>
 </ripple>

@@ -10,22 +10,22 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/backgroud_edit</item>
+        <item name="android:statusBarColor">?attr/background_edit</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
-        <item name="android:navigationBarColor">?attr/backgroud_calculator</item>
+        <item name="android:navigationBarColor">?attr/background_calculator</item>
         <!-- Customize your theme here. -->
-        <item name="backgroud_calculator">@color/backgroud_calculator</item>
-        <item name="backgroud_edit">@color/backgroud_edit</item>
-        <item name="backgroud_number">@color/backgroud_number</item>
-        <item name="backgroud_number_pressed">@color/backgroud_number_pressed</item>
-        <item name="backgroud_clear">@color/backgroud_clear</item>
-        <item name="backgroud_clear_pressed">@color/backgroud_clear_pressed</item>
-        <item name="backgroud_equals">@color/backgroud_equals</item>
-        <item name="backgroud_equals_pressed">@color/backgroud_equals_pressed</item>
-        <item name="backgroud_operator">@color/backgroud_operator</item>
-        <item name="backgroud_operator_pressed">@color/backgroud_operator_pressed</item>
-        <item name="backgroud_operator_small_pressed">@color/backgroud_operator_small_pressed</item>
+        <item name="background_calculator">@color/background_calculator</item>
+        <item name="background_edit">@color/background_edit</item>
+        <item name="background_number">@color/background_number</item>
+        <item name="background_number_pressed">@color/background_number_pressed</item>
+        <item name="background_clear">@color/background_clear</item>
+        <item name="background_clear_pressed">@color/background_clear_pressed</item>
+        <item name="background_equals">@color/background_equals</item>
+        <item name="background_equals_pressed">@color/background_equals_pressed</item>
+        <item name="background_operator">@color/background_operator</item>
+        <item name="background_operator_pressed">@color/background_operator_pressed</item>
+        <item name="background_operator_small_pressed">@color/background_operator_small_pressed</item>
         <item name="textcolor_calculator">@color/textcolor_calculator</item>
         <item name="colorAccent">@color/textcolor_calculator</item>
     </style>

@@ -10,22 +10,22 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/backgroud_edit</item>
+        <item name="android:statusBarColor">?attr/background_edit</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
-        <item name="android:navigationBarColor">?attr/backgroud_calculator</item>
+        <item name="android:navigationBarColor">?attr/background_calculator</item>
         <!-- Customize your theme here. -->
-        <item name="backgroud_calculator">@color/backgroud_calculator_night</item>
-        <item name="backgroud_edit">@color/backgroud_edit_night</item>
-        <item name="backgroud_number">@color/backgroud_number_night</item>
-        <item name="backgroud_number_pressed">@color/backgroud_number_pressed_night</item>
-        <item name="backgroud_clear">@color/backgroud_clear_night</item>
-        <item name="backgroud_clear_pressed">@color/backgroud_clear_pressed_night</item>
-        <item name="backgroud_equals">@color/backgroud_equals_night</item>
-        <item name="backgroud_equals_pressed">@color/backgroud_equals_pressed_night</item>
-        <item name="backgroud_operator">@color/backgroud_operator_night</item>
-        <item name="backgroud_operator_pressed">@color/backgroud_operator_pressed_night</item>
-        <item name="backgroud_operator_small_pressed">@color/backgroud_operator_small_pressed_night</item>
+        <item name="background_calculator">@color/background_calculator_night</item>
+        <item name="background_edit">@color/background_edit_night</item>
+        <item name="background_number">@color/background_number_night</item>
+        <item name="background_number_pressed">@color/background_number_pressed_night</item>
+        <item name="background_clear">@color/background_clear_night</item>
+        <item name="background_clear_pressed">@color/background_clear_pressed_night</item>
+        <item name="background_equals">@color/background_equals_night</item>
+        <item name="background_equals_pressed">@color/background_equals_pressed_night</item>
+        <item name="background_operator">@color/background_operator_night</item>
+        <item name="background_operator_pressed">@color/background_operator_pressed_night</item>
+        <item name="background_operator_small_pressed">@color/background_operator_small_pressed_night</item>
         <item name="textcolor_calculator">@color/textcolor_calculator_night</item>
         <item name="colorAccent">@color/textcolor_calculator_night</item>
     </style>

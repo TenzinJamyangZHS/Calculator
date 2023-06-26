@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroud_calculator"
+    android:background="?attr/background_calculator"
     android:fitsSystemWindows="true"
     tools:context=".CalculatorActivity">
 
@@ -60,7 +60,7 @@
         android:id="@+id/input_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="?attr/backgroud_edit"
+        android:background="?attr/background_edit"
         android:overScrollMode="never"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@id/guideline_1"

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="?attr/backgroud_number_pressed">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="?attr/background_number_pressed">
 
     <item android:id="@android:id/button1" >
         <shape>
             <corners android:radius="64dp"/>
-            <solid android:color="?attr/backgroud_number"/>
+            <solid android:color="?attr/background_number"/>
         </shape>
     </item>
 </ripple>
