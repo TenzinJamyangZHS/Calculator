@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pressed"
+        android:state_pressed="true"
+        android:drawable="@drawable/bg_clear_23" />
+    <item
+        android:id="@+id/unpressed"
+        android:state_pressed="false"
+        android:drawable="@drawable/bg_clear_01" />
+    <item android:id="@android:id/mask">
+        <shape>
+            <corners android:radius="64dp"/>
+            <solid android:color="?attr/backgroud_clear"/>
+        </shape>
+    </item>
+    <transition
+        android:fromId="@id/unpressed"
+        android:toId="@id/pressed">
+        <animation-list android:oneshot="true">
+            <item android:drawable="@drawable/bg_clear_01" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_02" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_03" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_04" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_05" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_06" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_07" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_08" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_09" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_10" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_11" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_12" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_13" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_14" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_15" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_16" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_17" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_18" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_19" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_20" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_21" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_22" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_23" android:duration="10"/>
+        </animation-list>
+    </transition>
+
+    <transition
+        android:fromId="@id/pressed"
+        android:toId="@id/unpressed">
+        <animation-list android:oneshot="true">
+            <item android:drawable="@drawable/bg_clear_23" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_22" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_21" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_20" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_19" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_18" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_17" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_16" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_15" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_14" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_13" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_12" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_11" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_10" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_09" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_08" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_07" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_06" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_05" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_04" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_03" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_02" android:duration="10"/>
+            <item android:drawable="@drawable/bg_clear_01" android:duration="10"/>
+        </animation-list>
+    </transition>
+
+</animated-selector>

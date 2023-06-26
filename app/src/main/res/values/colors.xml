@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="textcolor_calculator" tools:targetApi="s">@android:color/system_accent3_800</color>
+    <color name="textcolor_calculator_night" tools:targetApi="s">@android:color/system_accent3_50</color>
+    <color name="backgroud_calculator" tools:targetApi="s">@android:color/system_accent2_10</color>
+    <color name="backgroud_edit" tools:targetApi="s">@android:color/system_accent2_100</color>
+    <color name="backgroud_number" tools:targetApi="s">@android:color/system_accent2_50</color>
+    <color name="backgroud_number_pressed" tools:targetApi="s">@android:color/system_accent2_200</color>
+    <color name="backgroud_clear" tools:targetApi="s">@android:color/system_accent3_200</color>
+    <color name="backgroud_clear_pressed" tools:targetApi="s">@android:color/system_accent3_400</color>
+    <color name="backgroud_equals" tools:targetApi="s">@android:color/system_accent1_200</color>
+    <color name="backgroud_equals_pressed" tools:targetApi="s">@android:color/system_accent1_400</color>
+    <color name="backgroud_operator" tools:targetApi="s">@android:color/system_accent1_100</color>
+    <color name="backgroud_operator_pressed" tools:targetApi="s">@android:color/system_accent1_300</color>
+    <color name="backgroud_operator_small_pressed" tools:targetApi="s">@android:color/system_accent1_300</color>
+
+    <color name="backgroud_calculator_night" tools:targetApi="s">@android:color/system_accent2_1000</color>
+    <color name="backgroud_edit_night" tools:targetApi="s">@android:color/system_accent2_900</color>
+    <color name="backgroud_number_night" tools:targetApi="s">@android:color/system_accent2_900</color>
+    <color name="backgroud_number_pressed_night" tools:targetApi="s">@android:color/system_accent2_700</color>
+    <color name="backgroud_clear_night" tools:targetApi="s">@android:color/system_accent3_700</color>
+    <color name="backgroud_clear_pressed_night" tools:targetApi="s">@android:color/system_accent3_500</color>
+    <color name="backgroud_equals_night" tools:targetApi="s">@android:color/system_accent1_700</color>
+    <color name="backgroud_equals_pressed_night" tools:targetApi="s">@android:color/system_accent1_500</color>
+    <color name="backgroud_operator_night" tools:targetApi="s">@android:color/system_accent1_800</color>
+    <color name="backgroud_operator_pressed_night" tools:targetApi="s">@android:color/system_accent1_600</color>
+    <color name="backgroud_operator_small_pressed_night" tools:targetApi="s">@android:color/system_accent1_700</color>
+</resources>

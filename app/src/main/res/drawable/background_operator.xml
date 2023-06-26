@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pressed"
+        android:state_pressed="true"
+        android:drawable="@drawable/bg_operator_23" />
+    <item
+        android:id="@+id/unpressed"
+        android:state_pressed="false"
+        android:drawable="@drawable/bg_operator_01" />
+    <transition
+        android:fromId="@id/unpressed"
+        android:toId="@id/pressed">
+        <animation-list android:oneshot="true">
+            <item android:drawable="@drawable/bg_operator_01" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_02" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_03" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_04" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_05" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_06" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_07" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_08" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_09" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_10" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_11" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_12" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_13" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_14" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_15" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_16" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_17" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_18" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_19" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_20" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_21" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_22" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_23" android:duration="10"/>
+        </animation-list>
+    </transition>
+
+    <transition
+        android:fromId="@id/pressed"
+        android:toId="@id/unpressed">
+        <animation-list android:oneshot="true">
+            <item android:drawable="@drawable/bg_operator_23" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_22" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_21" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_20" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_19" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_18" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_17" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_16" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_15" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_14" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_13" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_12" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_11" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_10" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_09" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_08" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_07" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_06" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_05" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_04" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_03" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_02" android:duration="10"/>
+            <item android:drawable="@drawable/bg_operator_01" android:duration="10"/>
+        </animation-list>
+    </transition>
+
+</animated-selector>

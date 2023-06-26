@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pressed"
+        android:state_pressed="true"
+        android:drawable="@drawable/bg_number_23" />
+    <item
+        android:id="@+id/unpressed"
+        android:state_pressed="false"
+        android:drawable="@drawable/bg_number_01" />
+    <transition
+        android:fromId="@id/unpressed"
+        android:toId="@id/pressed">
+        <animation-list android:oneshot="true">
+            <item android:drawable="@drawable/bg_number_01" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_02" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_03" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_04" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_05" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_06" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_07" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_08" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_09" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_10" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_11" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_12" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_13" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_14" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_15" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_16" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_17" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_18" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_19" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_20" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_21" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_22" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_23" android:duration="10"/>
+        </animation-list>
+    </transition>
+
+    <transition
+        android:fromId="@id/pressed"
+        android:toId="@id/unpressed">
+        <animation-list android:oneshot="true">
+            <item android:drawable="@drawable/bg_number_23" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_22" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_21" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_20" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_19" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_18" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_17" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_16" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_15" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_14" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_13" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_12" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_11" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_10" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_09" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_08" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_07" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_06" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_05" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_04" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_03" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_02" android:duration="10"/>
+            <item android:drawable="@drawable/bg_number_01" android:duration="10"/>
+        </animation-list>
+    </transition>
+
+</animated-selector>
