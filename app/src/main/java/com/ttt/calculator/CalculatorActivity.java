@@ -658,7 +658,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         canCalculated(inputList);
 
-        if (canCalculate) {//以括号 根号 log 三角函数 百分比 阶乘 除乘减加的顺序一次运算
+        if (canCalculate) {//以括号 根号 log 三角函数 百分比 阶乘 除乘减加的顺序依次运算
             checkMinus(inputList);
             bracketMethod(inputList);
             rootMethod(inputList);
