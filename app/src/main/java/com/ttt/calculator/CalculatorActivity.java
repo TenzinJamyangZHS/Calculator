@@ -162,21 +162,38 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         int height = displayMetrics.heightPixels;
         mInputView.setTextSize((float) (height / 30));
         mResultView.setTextSize((float) (height / 55));
-        mClearButton.setTextSize((float) (height / 70));
-        mEqualsButton.setTextSize((float) (height / 70));
-        mDeleteButton.setTextSize((float) (height / 70));
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mMoreButton.setTextSize((float) (height / 180));
+            mClearButton.setTextSize((float) (height / 70));
+            mEqualsButton.setTextSize((float) (height / 70));
+            mDeleteButton.setTextSize((float) (height / 70));
+            for (Button button : mOperatorButton) {
+                button.setTextSize((float) (height / 70));
+            }
+            for (Button button : mNumberButton) {
+                button.setTextSize((float) (height / 70));
+            }
+            for (Button button : mSmallButton) {
+                button.setTextSize((float) (height / 100));
+            }
+
         }
 
-        for (Button button : mOperatorButton) {
-            button.setTextSize((float) (height / 70));
-        }
-        for (Button button : mNumberButton) {
-            button.setTextSize((float) (height / 70));
-        }
-        for (Button button : mSmallButton) {
-            button.setTextSize((float) (height / 100));
+
+
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            for (Button button : mOperatorButton) {
+                button.setTextSize((float) (height / 50));
+            }
+            for (Button button : mNumberButton) {
+                button.setTextSize((float) (height / 50));
+            }
+            for (Button button : mSmallButton) {
+                button.setTextSize((float) (height / 80));
+            }
+            mClearButton.setTextSize((float) (height / 50));
+            mEqualsButton.setTextSize((float) (height / 50));
+            mDeleteButton.setTextSize((float) (height / 50));
         }
     }
 
