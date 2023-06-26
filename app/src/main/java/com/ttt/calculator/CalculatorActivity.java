@@ -179,9 +179,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
         }
 
-
-
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             for (Button button : mOperatorButton) {
                 button.setTextSize((float) (height / 50));
             }
@@ -1162,11 +1160,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         }
-        if (mInputView.getText().toString().length()>0){
-            if (NUMBER_NO_POINT.indexOf(mInputView.getText().toString().charAt(mInputView.getText().toString().length()-1))!=-1
-                    || mInputView.getText().toString().charAt(mInputView.getText().toString().length()-1) == ')'
-                    || mInputView.getText().toString().charAt(mInputView.getText().toString().length()-1) == '!'
-                    || mInputView.getText().toString().charAt(mInputView.getText().toString().length()-1) == '%' ) {
+        if (mInputView.getText().toString().length() > 0) {
+            if (NUMBER_NO_POINT.indexOf(mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1)) != -1
+                    || mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1) == ')'
+                    || mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1) == '!'
+                    || mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1) == '%') {
                 updateResultView();
             }
         } else {
