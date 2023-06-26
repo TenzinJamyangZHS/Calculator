@@ -70,7 +70,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 final ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) mGuideline1.getLayoutParams();
 
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v) {//重新设置guideline位置以显示或隐藏更多的按键
                     if (!mShowFlag) {
                         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.41f, 0.49f);
                         valueAnimator.setDuration(200);
@@ -561,10 +561,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private void updateResultView() {
         removeThousandSeparator();
-        StringBuilder operator = new StringBuilder();
-        StringBuilder number = new StringBuilder();
-        ArrayList<String> inputList = new ArrayList<>();
-        for (int i = 0; i < mInputText.length(); i++) {
+        StringBuilder operator = new StringBuilder();//记录超过单字符的运算符号
+        StringBuilder number = new StringBuilder();//记录数字
+        ArrayList<String> inputList = new ArrayList<>();//新建集合记录内容以便计算
+        for (int i = 0; i < mInputText.length(); i++) {//向集合中依次添加内容
             if (NUMBER_POINT.indexOf(mInputText.charAt(i)) != -1) {
                 number.append(mInputText.charAt(i));
             } else if (mInputText.charAt(i) == 'l') {
@@ -615,17 +615,17 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 inputList.add(String.valueOf(mInputText.charAt(i)));
             }
         }
-        if (number.length() > 0) {
+        if (number.length() > 0) {//检查数字是否添加完全
             inputList.add(String.valueOf(number));
             number.setLength(0);
         }
         insertMultiply(inputList);
-        for (int i = 0; i < inputList.size(); i++) {
+        for (int i = 0; i < inputList.size(); i++) {//把圆周率转化为可计算数值
             if (inputList.get(i).equals(getResources().getString(R.string.pi))) {
                 inputList.set(i, String.valueOf(Math.PI));
             }
         }
-        for (int i = 0; i < inputList.size(); i++) {
+        for (int i = 0; i < inputList.size(); i++) {//处理使用删除键时产生的多余0
             if (inputList.get(i).length() > 1) {
                 if (inputList.get(i).startsWith(getResources().getString(R.string.zero))
                         && inputList.get(i).charAt(1) == '0') {
@@ -643,7 +643,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         canCalculated(inputList);
 
-        if (canCalculate) {
+        if (canCalculate) {//以括号 根号 log 三角函数 百分比 阶乘 除乘减加的顺序一次运算
             checkMinus(inputList);
             bracketMethod(inputList);
             rootMethod(inputList);
@@ -660,7 +660,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             plusMethod(inputList);
         }
         canCalculated(inputList);
-        if (canCalculate) {
+        if (canCalculate) {//若运算完成 则集合内容剩余唯一
             if (inputList.size() == 1) {
                 mResultView.setText(inputList.get(0));
             } else if (inputList.size() == 0) {
