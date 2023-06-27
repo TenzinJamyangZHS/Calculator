@@ -232,7 +232,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         mCursorPosition = mInputView.getSelectionStart();//获取当前指针位置
         mInputText = new StringBuilder(mInputView.getText().toString());//获取当前输入框文本内容
         boolean inputOk = true;//输入规则检测
-        if (mInputText.length() != 0 && mCursorPosition != 0//当输入框内容不为空 指针不在0位 不在末尾时 做以下判断 相邻的内容是否违规
+        if (notEmptyNotStart()//当输入框内容不为空 指针不在0位 不在末尾时 做以下判断 相邻的内容是否违规
                 && mCursorPosition != mInputText.length()) {
             if (!notBeforeAny() || !notAfterAny()) {
                 inputOk = false;
@@ -293,6 +293,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     }
     /*部分规则---*/
+    private boolean notEmptyNotStart() {
+        return mInputText.length() != 0 && mCursorPosition != 0;
+    }
     private boolean numberNoPoint(int i) {
         return NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1;
     }
@@ -484,7 +487,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void operateInputPF(String buttonString) {//输入百分比与阶乘
-        if (mInputText.length() != 0 && mCursorPosition != 0) {
+        if (notEmptyNotStart()) {
             if (mCursorPosition == mInputText.length()) {
                 if (notBeforeOperator()) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
@@ -500,7 +503,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void operateInputPow(String buttonString) {//输入次方
-        if (mInputText.length() != 0 && mCursorPosition != 0) {
+        if (notEmptyNotStart()) {
             if (mCursorPosition == mInputText.length()) {
                 if (notBeforeOperator()) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
@@ -536,7 +539,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void operateInputPMD(String buttonString) {//输入加乘除
-        if (mInputText.length() != 0 && mCursorPosition != 0) {
+        if (notEmptyNotStart()) {
             if (mCursorPosition == mInputText.length()) {
                 if (notBeforeOperator()) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
@@ -573,7 +576,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void pointInput(String buttonString) {//输入小数点
-        if (mInputText.length() != 0 && mCursorPosition != 0) {//小数点不能开头输入
+        if (notEmptyNotStart()) {//小数点不能开头输入
             int indexFirst = 0;//当前输入所在位置的数字开始点
             int indexSecond = mInputText.length() - 1;//当前输入所在位置的数字结尾点
             if (mCursorPosition == mInputText.length()) {//若输入位置在结尾，判断所在位置的数字是否已有小数点，向前判断
@@ -588,24 +591,24 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         indexFirst = getNumberStart(indexFirst);
         indexSecond = getNumberEnd(indexSecond);
         if (indexFirst == 0 && indexSecond == mInputText.length() - 1) {
-            if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
+            if (notPoint(indexFirst) && notPoint(indexSecond)) {
                 updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 updateResultView();
             }
         } else if (indexFirst == 0 && indexSecond != mInputText.length() - 1) {
-            if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
+            if (notPoint(indexFirst) && notPoint(indexSecond)
                     && indexSecond != mCursorPosition) {
                 updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 updateResultView();
             }
         } else if (indexFirst != 0 && indexSecond == mInputText.length() - 1
                 && indexFirst != mCursorPosition - 1) {
-            if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
+            if (notPoint(indexFirst) && notPoint(indexSecond)) {
                 updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 updateResultView();
             }
         } else {
-            if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
+            if (notPoint(indexFirst) && notPoint(indexSecond)
                     && indexFirst != mCursorPosition - 1 && indexSecond != mCursorPosition) {
                 updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 updateResultView();
@@ -636,12 +639,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private void pointCheckEnd(int indexFirst, String buttonString) {
         indexFirst = getNumberStart(indexFirst);
         if (indexFirst == 0) {
-            if (mInputText.charAt(indexFirst) != '.') {
+            if (notPoint(indexFirst)) {
                 updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 updateResultView();
             }
         } else {
-            if (mInputText.charAt(indexFirst) != '.' && indexFirst != mCursorPosition - 1) {
+            if (notPoint(indexFirst) && indexFirst != mCursorPosition - 1) {
                 updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 updateResultView();
             }
@@ -1224,7 +1227,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private void deleteMethod() {//删除功能
         savedTextMethod();
-        if (mInputText.length() != 0 && mCursorPosition != 0) {
+        if (notEmptyNotStart()) {
             checkDelete(mCursorPosition == mInputText.length());
         }
         if (mInputView.getText().toString().length() > 0) {
