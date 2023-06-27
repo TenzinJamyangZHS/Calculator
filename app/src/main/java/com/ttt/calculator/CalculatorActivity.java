@@ -41,7 +41,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private final String NUMBER_POINT = ".0123456789";//所有数字包含小数点
     public static final String TOO_LARGE = "Infinity";//过大提醒
     private boolean canCalculate;//检测是否可以运算
-    private final String WARNING = "Math Error !!!";//运算错误提示
     private StringBuilder mSavedText;
 
 
@@ -233,7 +232,8 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         mCursorPosition = mInputView.getSelectionStart();//获取当前指针位置
         mInputText = new StringBuilder(mInputView.getText().toString());//获取当前输入框文本内容
         boolean inputOk = true;//输入规则检测
-        if (mInputText.length() != 0 && mCursorPosition != 0 && mCursorPosition != mInputText.length()) {
+        if (mInputText.length() != 0 && mCursorPosition != 0//当输入框内容不为空 指针不在0位 不在末尾时 做以下判断 相邻的内容是否违规
+                && mCursorPosition != mInputText.length() && mCursorPosition != mSavedText.length()) {
             //不能相邻前者
             String NOT_BEFORE_ANY = "anotcsilg";
             //不能相邻后者
@@ -243,7 +243,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 inputOk = false;
             }
         }
-        if (inputOk) {
+        //检测输入内容时，一般先判断输入框内容是否为空，再判断指针位置是否为0或末尾，再根据输入的内容相应的规则判断
+        //输入左括号时，mBracketStatus自增，输入右括号时，其自减，以此判断括号是否完整。
+        if (inputOk) {//确保相邻内容不违规时
             switch (buttonString) {
                 case "AC":
                     clearMethod();
@@ -587,11 +589,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         boolean isResultOk = true;
         String sResult = mResultView.getText().toString();
         for (int i = 0; i < sResult.length(); i++) {
-            if (NUMBER_POINT.indexOf(sResult.charAt(i))==-1){
-                isResultOk=false;
+            if (NUMBER_POINT.indexOf(sResult.charAt(i)) == -1 && sResult.charAt(i) != '-') {
+                isResultOk = false;
             }
         }
-        if (isResultOk){
+        if (isResultOk) {
             mInputView.setText(mResultView.getText().toString());
             mInputView.setSelection(mInputView.getText().toString().length());
         }
@@ -706,6 +708,8 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             }
         } else {
             //不能完成计算的提醒
+            //运算错误提示
+            String WARNING = "Math Error !!!";
             mResultView.setText(WARNING);
         }
 
@@ -1119,6 +1123,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void deleteMethod() {//删除功能
+        if (mSavedText != null && mSavedText.length() > 0) {
+            mInputText = new StringBuilder(mSavedText);
+            mInputView.setText(mInputText);
+            mCursorPosition = mSavedText.length();
+            mInputView.setSelection(mSavedText.length());
+            mSavedText.setLength(0);
+        }
         if (mInputText.length() != 0 && mCursorPosition != 0) {
             if (mCursorPosition == mInputText.length()) {
                 if (mInputText.charAt(mCursorPosition - 1) == '(') {
@@ -1196,7 +1207,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void clearMethod() {//清零功能
-        if (mSavedText!=null){
+        if (mSavedText != null) {
             mSavedText.setLength(0);
         }
         mBracketStatus = 0;
