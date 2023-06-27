@@ -1193,7 +1193,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void deleteNotEnd() {
+    private void deleteNotEnd() {//不在结尾删除条件判断
         if (mInputText.charAt(mCursorPosition - 1) == '(') {
             if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
                     || mInputText.charAt(mCursorPosition - 2) == 's') {
@@ -1211,7 +1211,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void deleteFunction(int num) {
+    private void deleteFunction(int num) {//不在结尾删除
         String substring1 = mInputText.substring(0, mCursorPosition - num);
         String substring2 = mInputText.substring(mCursorPosition, mInputText.length());
         mInputText = new StringBuilder(substring1 + substring2);
@@ -1219,7 +1219,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         mInputView.setSelection(mCursorPosition - num);
     }
 
-    private void deleteAtEnd() {
+    private void deleteAtEnd() {//在结尾删除条件判断
         if (mInputText.charAt(mCursorPosition - 1) == '(') {
             if (mCursorPosition > 1) {
                 if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
@@ -1241,14 +1241,14 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void deleteEndFunction(int num) {
+    private void deleteEndFunction(int num) {//在结尾删除
         String substring = mInputText.substring(0, mCursorPosition - num);
         mInputText = new StringBuilder(substring);
         mInputView.setText(mInputText);
         mInputView.setSelection(mInputText.length());
     }
 
-    private void savedTextMethod() {
+    private void savedTextMethod() {//检测等号运算
         if (mSavedText != null && mSavedText.length() > 0) {
             mInputText = new StringBuilder(mSavedText);
             mInputView.setText(mInputText);
