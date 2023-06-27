@@ -512,6 +512,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 if (notBeforeOperator()
                         && notAfterOperator2()) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                    updateResultView();
                 }
             }
         }
@@ -528,11 +529,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             } else if (mCursorPosition == 0) {
                 if (notAfterOperator1(0)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                    updateResultView();
                 }
             } else {
                 if (notBeforeOperator()
                         && notAfterOperator1(mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                    updateResultView();
                 }
             }
         }
@@ -548,6 +551,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 if (notBeforeOperator()
                         && notAfterOperator1(mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                    updateResultView();
                 }
             }
         }
