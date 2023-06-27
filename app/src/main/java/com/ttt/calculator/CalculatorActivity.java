@@ -233,7 +233,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         mInputText = new StringBuilder(mInputView.getText().toString());//获取当前输入框文本内容
         boolean inputOk = true;//输入规则检测
         if (mInputText.length() != 0 && mCursorPosition != 0//当输入框内容不为空 指针不在0位 不在末尾时 做以下判断 相邻的内容是否违规
-                && mCursorPosition != mInputText.length() && mCursorPosition != mSavedText.length()) {
+                && mCursorPosition != mInputText.length()) {
             //不能相邻前者
             String NOT_BEFORE_ANY = "anotcsilg";
             //不能相邻后者
@@ -1175,11 +1175,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private void deleteMethod() {//删除功能
         savedTextMethod();
         if (mInputText.length() != 0 && mCursorPosition != 0) {
-            if (mCursorPosition == mInputText.length()) {
-                deleteAtEnd();
-            } else {
-                deleteNotEnd();
-            }
+            checkDelete(mCursorPosition == mInputText.length());
         }
         if (mInputView.getText().toString().length() > 0) {
             if (NUMBER_NO_POINT.indexOf(mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1)) != -1
@@ -1193,21 +1189,32 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void deleteNotEnd() {//不在结尾删除条件判断
+    private void checkDelete(boolean isEnd) {
         if (mInputText.charAt(mCursorPosition - 1) == '(') {
-            if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
-                    || mInputText.charAt(mCursorPosition - 2) == 's') {
-                deleteFunction(4);
-                mBracketStatus--;
-            } else if (mInputText.charAt(mCursorPosition - 1) == ')') {
-                deleteFunction(1);
-                mBracketStatus++;
+            if (mCursorPosition > 1) {
+                if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
+                        || mInputText.charAt(mCursorPosition - 2) == 's') {//log tan sin cos
+                    isEndCheck(isEnd,4);
+                } else {
+                    isEndCheck(isEnd,1);
+                }
             } else {
-                deleteFunction(1);
-                mBracketStatus--;
+                isEndCheck(isEnd,1);
             }
+            mBracketStatus--;
+        } else if (mInputText.charAt(mCursorPosition - 1) == ')') {
+            isEndCheck(isEnd,1);
+            mBracketStatus++;
         } else {
-            deleteFunction(1);
+            isEndCheck(isEnd,1);
+        }
+    }
+
+    private void isEndCheck(boolean isEnd, int i) {
+        if (isEnd) {
+            deleteEndFunction(i);
+        } else {
+            deleteFunction(i);
         }
     }
 
@@ -1219,27 +1226,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         mInputView.setSelection(mCursorPosition - num);
     }
 
-    private void deleteAtEnd() {//在结尾删除条件判断
-        if (mInputText.charAt(mCursorPosition - 1) == '(') {
-            if (mCursorPosition > 1) {
-                if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
-                        || mInputText.charAt(mCursorPosition - 2) == 's') {
-                    deleteEndFunction(4);
-                } else {
-                    deleteEndFunction(1);
-                }
-            } else {
-                deleteEndFunction(1);
-            }
-            mBracketStatus--;
-
-        } else if (mInputText.charAt(mCursorPosition - 1) == ')') {
-            deleteEndFunction(1);
-            mBracketStatus++;
-        } else {
-            deleteEndFunction(1);
-        }
-    }
 
     private void deleteEndFunction(int num) {//在结尾删除
         String substring = mInputText.substring(0, mCursorPosition - num);
