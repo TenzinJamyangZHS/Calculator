@@ -704,29 +704,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             number.setLength(0);
         }
         insertMultiply(inputList);
-        for (int i = 0; i < inputList.size(); i++) {//把圆周率转化为可计算数值
-            if (inputList.get(i).equals(getResources().getString(R.string.pi))) {
-                inputList.set(i, String.valueOf(Math.PI));
-            }
-        }
-        for (int i = 0; i < inputList.size(); i++) {//处理使用删除键时产生的多余0
-            if (inputList.get(i).length() > 1) {
-                if (inputList.get(i).startsWith(getResources().getString(R.string.zero))
-                        && inputList.get(i).charAt(1) == '0') {
-                    String s = inputList.get(i);
-                    while (s.startsWith(getResources().getString(R.string.zero))) {
-                        s = s.substring(1);
-                    }
-                    if (s.startsWith(getResources().getString(R.string.point))) {
-                        s = "0" + s;
-                    }
-                    inputList.set(i, s);
-                }
-            }
-
-        }
+        piToValue(inputList);
+        removeZero(inputList);
         canCalculated(inputList);
-
         if (canCalculate) {//以括号 根号 log 三角函数 百分比 阶乘 除乘减加的顺序依次运算
             checkMinus(inputList);
             bracketMethod(inputList);
@@ -758,6 +738,32 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
 
 
+    }
+
+    private void removeZero(ArrayList<String> inputList) {
+        for (int i = 0; i < inputList.size(); i++) {//处理使用删除键时产生的多余0
+            if (inputList.get(i).length() > 1) {
+                if (inputList.get(i).startsWith(getResources().getString(R.string.zero))
+                        && inputList.get(i).charAt(1) == '0') {
+                    String s = inputList.get(i);
+                    while (s.startsWith(getResources().getString(R.string.zero))) {
+                        s = s.substring(1);
+                    }
+                    if (s.startsWith(getResources().getString(R.string.point))) {
+                        s = "0" + s;
+                    }
+                    inputList.set(i, s);
+                }
+            }
+        }
+    }
+
+    private void piToValue(ArrayList<String> inputList) {
+        for (int i = 0; i < inputList.size(); i++) {//把圆周率转化为可计算数值
+            if (inputList.get(i).equals(getResources().getString(R.string.pi))) {
+                inputList.set(i, String.valueOf(Math.PI));
+            }
+        }
     }
 
     private void removeThousandSeparator() {//去除千分割副符，暂时无用
@@ -1177,13 +1183,21 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         if (mInputText.length() != 0 && mCursorPosition != 0) {
             if (mCursorPosition == mInputText.length()) {
                 if (mInputText.charAt(mCursorPosition - 1) == '(') {
-                    if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
-                            || mInputText.charAt(mCursorPosition - 2) == 's') {
-                        String substring = mInputText.substring(0, mCursorPosition - 4);
-                        mInputText = new StringBuilder(substring);
-                        mInputView.setText(mInputText);
-                        mInputView.setSelection(mInputText.length());
-                        mBracketStatus--;
+                    if (mCursorPosition>1){
+                        if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
+                                || mInputText.charAt(mCursorPosition - 2) == 's') {
+                            String substring = mInputText.substring(0, mCursorPosition - 4);
+                            mInputText = new StringBuilder(substring);
+                            mInputView.setText(mInputText);
+                            mInputView.setSelection(mInputText.length());
+                            mBracketStatus--;
+                        } else {
+                            String substring = mInputText.substring(0, mCursorPosition - 1);
+                            mInputText = new StringBuilder(substring);
+                            mInputView.setText(mInputText);
+                            mInputView.setSelection(mInputText.length());
+                            mBracketStatus--;
+                        }
                     } else {
                         String substring = mInputText.substring(0, mCursorPosition - 1);
                         mInputText = new StringBuilder(substring);
@@ -1191,6 +1205,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                         mInputView.setSelection(mInputText.length());
                         mBracketStatus--;
                     }
+
                 } else if (mInputText.charAt(mCursorPosition - 1) == ')') {
                     String substring = mInputText.substring(0, mCursorPosition - 1);
                     mInputText = new StringBuilder(substring);
