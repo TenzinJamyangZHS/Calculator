@@ -41,7 +41,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     public static final String TOO_LARGE = "Infinity";//过大提醒
     private boolean canCalculate;//检测是否可以运算
     private StringBuilder mSavedText;
-    private final String NOT_AFTER_ANY = "anoig";//不能相邻后者
     private final String NOT_BEFORE_ANY = "anotcsilg"; //不能相邻前者
 
 
@@ -159,6 +158,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    /*设置字体沉浸状态栏隐藏输入法一行显示---*/
     private void setMyTestSize() {//设置字体大小
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -179,9 +179,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             for (Button button : mSmallButton) {
                 button.setTextSize((float) (height / 100));
             }
-
         }
-
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             for (Button button : mOperatorButton) {
                 button.setTextSize((float) (height / 50));
@@ -224,6 +222,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
+    /*---设置字体沉浸状态栏隐藏输入法一行显示*/
 
     @Override
     public void onClick(View v) {
@@ -235,8 +234,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         boolean inputOk = true;//输入规则检测
         if (mInputText.length() != 0 && mCursorPosition != 0//当输入框内容不为空 指针不在0位 不在末尾时 做以下判断 相邻的内容是否违规
                 && mCursorPosition != mInputText.length()) {
-            if (NOT_BEFORE_ANY.indexOf(mInputText.charAt(mCursorPosition - 1)) != -1
-                    || NOT_AFTER_ANY.indexOf(mInputText.charAt(mCursorPosition)) != -1) {
+            if (!notBeforeAny() || !notAfterAny()) {
                 inputOk = false;
             }
         }
@@ -294,7 +292,33 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
 
     }
+    /*部分规则---*/
+    private boolean numberNoPoint(int i) {
+        return NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1;
+    }
+    private boolean notAfterOperator1(int num) {
+        return NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(num)) == -1;
+    }
+    private boolean notAfterAny() {
+        //不能相邻后者
+        String NOT_AFTER_ANY = "anoig";
+        return NOT_AFTER_ANY.indexOf(mInputText.charAt(mCursorPosition)) == -1;
+    }
+    private boolean notBeforeAny() {
+        return NOT_BEFORE_ANY.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1;
+    }
+    private boolean notAfterOperator2() {
+        return NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1;
+    }
+    private boolean notBeforeOperator() {
+        return NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1;
+    }
+    private boolean notPoint(int num) {
+        return mInputText.charAt(num) != '.';
+    }
+    /*---部分规则*/
 
+    /*括号相关---*/
     private void bracketInput() {//输入括号
         if (mInputText.length() == 0) {
             addBracketLeft();
@@ -307,50 +331,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 bracketCheck();
             }
         }
-    }
-
-    private void bracketCheck() {//检测能否输入括号
-        int countBracket = 0;//统计已有括号状态
-        for (int i = 0; i < mCursorPosition + 1; i++) {
-            if (mInputText.charAt(i) == '(') countBracket++;
-            if (mInputText.charAt(i) == ')') countBracket--;
-        }
-        if (countBracket > 0) {
-            if (bracketRightCheckBefore()) {
-                addBracketRight();
-            } else if (bracketLeftCheck()) {
-                addBracketLeft();
-            }
-        } else {
-            if (bracketLeftCheck()) {
-                addBracketLeft();
-            }
-        }
-    }
-
-    private boolean bracketLeftCheck() {//左括号检测
-        return bracketLeftCheckBefore()
-                && NOT_AFTER_ANY.indexOf(mInputText.charAt(mCursorPosition)) == -1
-                && NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1 ;
-    }
-
-    private boolean bracketRightCheckBefore() {//右括号检测前
-        return NOT_BEFORE_ANY.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                && NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1;
-    }
-
-    private void addBracketLeft() {//添加做括号
-        updateInputView(mCursorPosition + 1, mCursorPosition,
-                getResources().getString(R.string.bracketleft));
-        mBracketStatus++;
-
-    }
-
-    private void addBracketRight() {//添加右括号
-        updateInputView(mCursorPosition + 1, mCursorPosition,
-                getResources().getString(R.string.bracketright));
-        mBracketStatus--;
-        updateResultView();
     }
 
     private void bracketCheckStart() {//检测能否输入括号开端
@@ -373,32 +353,78 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private boolean bracketLeftCheckBefore() {//左括号检测前
-        return NOT_BEFORE_ANY.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                && mInputText.charAt(mCursorPosition - 1) != '.';
+    private void bracketCheck() {//检测能否输入括号
+        int countBracket = 0;//统计已有括号状态
+        for (int i = 0; i < mCursorPosition + 1; i++) {
+            if (mInputText.charAt(i) == '(') countBracket++;
+            if (mInputText.charAt(i) == ')') countBracket--;
+        }
+        if (countBracket > 0) {
+            if (bracketRightCheck()) {
+                addBracketRight();
+            } else if (bracketLeftCheck()) {
+                addBracketLeft();
+            }
+        } else {
+            if (bracketLeftCheck()) {
+                addBracketLeft();
+            }
+        }
     }
+
+    private boolean bracketRightCheck() {
+        return bracketRightCheckBefore() && notPoint(mCursorPosition);
+    }
+
+    private boolean bracketLeftCheck() {//左括号检测
+        return bracketLeftCheckBefore()
+                && notAfterAny()
+                && notAfterOperator2();
+    }
+    private boolean bracketRightCheckBefore() {//右括号检测前
+        return notBeforeAny() && notBeforeOperator();
+    }
+
+    private boolean bracketLeftCheckBefore() {//左括号检测前
+        return notBeforeAny() && notPoint(mCursorPosition-1);
+    }
+
+    private void addBracketLeft() {//添加做括号
+        updateInputView(mCursorPosition + 1, mCursorPosition,
+                getResources().getString(R.string.bracketleft));
+        mBracketStatus++;
+
+    }
+
+    private void addBracketRight() {//添加右括号
+        updateInputView(mCursorPosition + 1, mCursorPosition,
+                getResources().getString(R.string.bracketright));
+        mBracketStatus--;
+        updateResultView();
+    }
+
+    /*---括号相关*/
 
     private void operateInputRoot(String buttonString) {//输入根号
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
         } else {
             if (mCursorPosition == mInputText.length()) {
-                if (mInputText.charAt(mCursorPosition - 1) != '.') {
+                if (notPoint(mCursorPosition-1)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else if (mCursorPosition == 0) {
-                if (NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(0)) == -1) {
+                if (notAfterOperator1(0)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else {
-                if (mInputText.charAt(mCursorPosition - 1) != '.'
-                        && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                if (notPoint(mCursorPosition-1)
+                        && notAfterOperator1(mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             }
         }
     }
-
     private void operateInputLog(String buttonString) {//输入log
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 4, mCursorPosition,
@@ -406,20 +432,20 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             mBracketStatus++;
         } else {
             if (mCursorPosition == mInputText.length()) {
-                if (mInputText.charAt(mCursorPosition - 1) != '.') {
+                if (notPoint(mCursorPosition-1)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
                             buttonString + getResources().getString(R.string.bracketleft));
                     mBracketStatus++;
                 }
             } else if (mCursorPosition == 0) {
-                if (NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(0)) == -1) {
+                if (notAfterOperator1(0)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
                             buttonString + getResources().getString(R.string.bracketleft));
                     mBracketStatus++;
                 }
             } else {
-                if (mInputText.charAt(mCursorPosition - 1) != '.'
-                        && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                if (notPoint(mCursorPosition-1)
+                        && notAfterOperator1(mCursorPosition)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
                             buttonString + getResources().getString(R.string.bracketleft));
                     mBracketStatus++;
@@ -435,7 +461,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             mBracketStatus++;
         } else {
             if (mCursorPosition == mInputText.length()) {
-                if (mInputText.charAt(mCursorPosition - 1) != '.') {
+                if (notPoint(mCursorPosition-1)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
                             buttonString + getResources().getString(R.string.bracketleft));
                     mBracketStatus++;
@@ -447,8 +473,8 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                     mBracketStatus++;
                 }
             } else {
-                if (mInputText.charAt(mCursorPosition - 1) != '.'
-                        && NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                if (notPoint(mCursorPosition-1)
+                        && notAfterOperator2()) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
                             buttonString + getResources().getString(R.string.bracketleft));
                     mBracketStatus++;
@@ -460,12 +486,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private void operateInputPF(String buttonString) {//输入百分比与阶乘
         if (mInputText.length() != 0 && mCursorPosition != 0) {
             if (mCursorPosition == mInputText.length()) {
-                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                if (notBeforeOperator()) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else {
-                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                        && mInputText.charAt(mCursorPosition) != '.') {
+                if (notBeforeOperator()
+                        && notPoint(mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             }
@@ -476,12 +502,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private void operateInputPow(String buttonString) {//输入次方
         if (mInputText.length() != 0 && mCursorPosition != 0) {
             if (mCursorPosition == mInputText.length()) {
-                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                if (notBeforeOperator()) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else {
-                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                        && NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                if (notBeforeOperator()
+                        && notAfterOperator2()) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             }
@@ -493,16 +519,16 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
         } else {
             if (mCursorPosition == mInputText.length()) {
-                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                if (notBeforeOperator()) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else if (mCursorPosition == 0) {
-                if (NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(0)) == -1) {
+                if (notAfterOperator1(0)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else {
-                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                        && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                if (notBeforeOperator()
+                        && notAfterOperator1(mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             }
@@ -512,12 +538,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private void operateInputPMD(String buttonString) {//输入加乘除
         if (mInputText.length() != 0 && mCursorPosition != 0) {
             if (mCursorPosition == mInputText.length()) {
-                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                if (notBeforeOperator()) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else {
-                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                        && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                if (notBeforeOperator()
+                        && notAfterOperator1(mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             }
@@ -529,7 +555,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
         } else {
             if (mCursorPosition == mInputText.length()) {
-                if (mInputText.charAt(mCursorPosition - 1) != '.') {
+                if (notPoint(mCursorPosition-1)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else if (mCursorPosition == 0) {
@@ -537,7 +563,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else {
-                if (mInputText.charAt(mCursorPosition - 1) != '.' && mInputText.charAt(mCursorPosition) != '.'
+                if (notPoint(mCursorPosition-1) && notPoint(mCursorPosition)
                         && mInputText.charAt(mCursorPosition) != '!') {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
@@ -589,7 +615,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private int getNumberEnd(int indexSecond) {
         for (int i = mCursorPosition; i < mInputText.length(); i++) {
-            if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
+            if (numberNoPoint(i)) {
                 indexSecond = i;
                 break;
             }
@@ -599,7 +625,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private int getNumberStart(int indexFirst) {
         for (int i = mCursorPosition - 1; i >= 0; i--) {
-            if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
+            if (numberNoPoint(i)) {
                 indexFirst = i;
                 break;
             }
@@ -862,8 +888,8 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 if (NOT_BEFORE_OPERATOR.contains(inputList.get(i)) && NOT_AFTER_OPERATOR_1.contains(inputList.get(i + 1))) {
                     canCalculate = false;
                 }
-                if (NOT_BEFORE_ANY.indexOf(inputList.get(i).charAt(inputList.get(i).length()-1)) != -1
-                        && NOT_BEFORE_OPERATOR.indexOf(inputList.get(i).charAt(inputList.get(i).length()-1)) != -1
+                if (NOT_BEFORE_ANY.indexOf(inputList.get(i).charAt(inputList.get(i).length() - 1)) != -1
+                        && NOT_BEFORE_OPERATOR.indexOf(inputList.get(i).charAt(inputList.get(i).length() - 1)) != -1
                         && inputList.get(i + 1).equals(getResources().getString(R.string.bracketright))) {
                     canCalculate = false;
                 }
