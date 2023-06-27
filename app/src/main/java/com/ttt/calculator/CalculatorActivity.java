@@ -1173,85 +1173,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void deleteMethod() {//删除功能
-        if (mSavedText != null && mSavedText.length() > 0) {
-            mInputText = new StringBuilder(mSavedText);
-            mInputView.setText(mInputText);
-            mCursorPosition = mSavedText.length();
-            mInputView.setSelection(mSavedText.length());
-            mSavedText.setLength(0);
-        }
+        savedTextMethod();
         if (mInputText.length() != 0 && mCursorPosition != 0) {
             if (mCursorPosition == mInputText.length()) {
-                if (mInputText.charAt(mCursorPosition - 1) == '(') {
-                    if (mCursorPosition>1){
-                        if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
-                                || mInputText.charAt(mCursorPosition - 2) == 's') {
-                            String substring = mInputText.substring(0, mCursorPosition - 4);
-                            mInputText = new StringBuilder(substring);
-                            mInputView.setText(mInputText);
-                            mInputView.setSelection(mInputText.length());
-                            mBracketStatus--;
-                        } else {
-                            String substring = mInputText.substring(0, mCursorPosition - 1);
-                            mInputText = new StringBuilder(substring);
-                            mInputView.setText(mInputText);
-                            mInputView.setSelection(mInputText.length());
-                            mBracketStatus--;
-                        }
-                    } else {
-                        String substring = mInputText.substring(0, mCursorPosition - 1);
-                        mInputText = new StringBuilder(substring);
-                        mInputView.setText(mInputText);
-                        mInputView.setSelection(mInputText.length());
-                        mBracketStatus--;
-                    }
-
-                } else if (mInputText.charAt(mCursorPosition - 1) == ')') {
-                    String substring = mInputText.substring(0, mCursorPosition - 1);
-                    mInputText = new StringBuilder(substring);
-                    mInputView.setText(mInputText);
-                    mInputView.setSelection(mInputText.length());
-                    mBracketStatus++;
-                } else {
-                    String substring = mInputText.substring(0, mCursorPosition - 1);
-                    mInputText = new StringBuilder(substring);
-                    mInputView.setText(mInputText);
-                    mInputView.setSelection(mInputText.length());
-                }
+                deleteAtEnd();
             } else {
-                if (mInputText.charAt(mCursorPosition - 1) == '(') {
-                    if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
-                            || mInputText.charAt(mCursorPosition - 2) == 's') {
-                        String substring1 = mInputText.substring(0, mCursorPosition - 4);
-                        String substring2 = mInputText.substring(mCursorPosition, mInputText.length());
-                        mInputText = new StringBuilder(substring1 + substring2);
-                        mInputView.setText(mInputText);
-                        mInputView.setSelection(mCursorPosition - 4);
-                        mBracketStatus--;
-                    } else if (mInputText.charAt(mCursorPosition - 1) == ')') {
-                        String substring1 = mInputText.substring(0, mCursorPosition - 1);
-                        String substring2 = mInputText.substring(mCursorPosition, mInputText.length());
-                        mInputText = new StringBuilder(substring1 + substring2);
-                        mInputView.setText(mInputText);
-                        mInputView.setSelection(mCursorPosition - 1);
-                        mBracketStatus++;
-                    } else {
-                        String substring1 = mInputText.substring(0, mCursorPosition - 1);
-                        String substring2 = mInputText.substring(mCursorPosition, mInputText.length());
-                        mInputText = new StringBuilder(substring1 + substring2);
-                        mInputView.setText(mInputText);
-                        mInputView.setSelection(mCursorPosition - 1);
-                        mBracketStatus--;
-                    }
-                } else {
-                    String substring1 = mInputText.substring(0, mCursorPosition - 1);
-                    String substring2 = mInputText.substring(mCursorPosition, mInputText.length());
-                    mInputText = new StringBuilder(substring1 + substring2);
-                    mInputView.setText(mInputText);
-                    mInputView.setSelection(mCursorPosition - 1);
-                }
+                deleteNotEnd();
             }
-
         }
         if (mInputView.getText().toString().length() > 0) {
             if (NUMBER_NO_POINT.indexOf(mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1)) != -1
@@ -1262,6 +1190,71 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             }
         } else {
             updateResultView();
+        }
+    }
+
+    private void deleteNotEnd() {
+        if (mInputText.charAt(mCursorPosition - 1) == '(') {
+            if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
+                    || mInputText.charAt(mCursorPosition - 2) == 's') {
+                deleteFunction(4);
+                mBracketStatus--;
+            } else if (mInputText.charAt(mCursorPosition - 1) == ')') {
+                deleteFunction(1);
+                mBracketStatus++;
+            } else {
+                deleteFunction(1);
+                mBracketStatus--;
+            }
+        } else {
+            deleteFunction(1);
+        }
+    }
+
+    private void deleteFunction(int num) {
+        String substring1 = mInputText.substring(0, mCursorPosition - num);
+        String substring2 = mInputText.substring(mCursorPosition, mInputText.length());
+        mInputText = new StringBuilder(substring1 + substring2);
+        mInputView.setText(mInputText);
+        mInputView.setSelection(mCursorPosition - num);
+    }
+
+    private void deleteAtEnd() {
+        if (mInputText.charAt(mCursorPosition - 1) == '(') {
+            if (mCursorPosition > 1) {
+                if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
+                        || mInputText.charAt(mCursorPosition - 2) == 's') {
+                    deleteEndFunction(4);
+                } else {
+                    deleteEndFunction(1);
+                }
+            } else {
+                deleteEndFunction(1);
+            }
+            mBracketStatus--;
+
+        } else if (mInputText.charAt(mCursorPosition - 1) == ')') {
+            deleteEndFunction(1);
+            mBracketStatus++;
+        } else {
+            deleteEndFunction(1);
+        }
+    }
+
+    private void deleteEndFunction(int num) {
+        String substring = mInputText.substring(0, mCursorPosition - num);
+        mInputText = new StringBuilder(substring);
+        mInputView.setText(mInputText);
+        mInputView.setSelection(mInputText.length());
+    }
+
+    private void savedTextMethod() {
+        if (mSavedText != null && mSavedText.length() > 0) {
+            mInputText = new StringBuilder(mSavedText);
+            mInputView.setText(mInputText);
+            mCursorPosition = mSavedText.length();
+            mInputView.setSelection(mSavedText.length());
+            mSavedText.setLength(0);
         }
     }
 
