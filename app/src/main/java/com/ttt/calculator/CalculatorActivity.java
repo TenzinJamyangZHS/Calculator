@@ -257,321 +257,365 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                     equalsMethod();
                     break;
                 case "( )":
-                    if (mInputText.length() == 0) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition,
-                                getResources().getString(R.string.bracketleft));
-                        mBracketStatus++;
-                    } else {
-                        //不可存在于左括号之前
-                        String NOT_BEFORE_BRACKET_LEFT = ".anotcsilg";
-                        //不可存在于左括号之后
-                        String NOT_AFTER_BRACKET_LEFT = ".+^÷×!%anoig";
-                        if (mCursorPosition == mInputText.length()) {
-                            if (mBracketStatus > 0) {
-                                if (NOT_BEFORE_BRACKET_RIGHT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition,
-                                            getResources().getString(R.string.bracketright));
-                                    mBracketStatus--;
-                                    updateResultView();
-                                } else if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition,
-                                            getResources().getString(R.string.bracketleft));
-                                    mBracketStatus++;
-                                }
-                            } else {
-                                if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition,
-                                            getResources().getString(R.string.bracketleft));
-                                    mBracketStatus++;
-                                }
-                            }
-
-                        } else if (mCursorPosition == 0) {
-                            if (NOT_AFTER_BRACKET_LEFT.indexOf(mInputText.charAt(0)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition,
-                                        getResources().getString(R.string.bracketleft));
-                                mBracketStatus++;
-                            }
-                        } else {
-                            int countBracket = 0;
-                            for (int i = 0; i < mCursorPosition + 1; i++) {
-                                if (mInputText.charAt(i) == '(') countBracket++;
-                                if (mInputText.charAt(i) == ')') countBracket--;
-                            }
-                            if (countBracket > 0) {
-                                //不可存在于右括号之后
-                                String NOT_AFTER_BRACKET_RIGHT = ".anoig";
-                                if (NOT_BEFORE_BRACKET_RIGHT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                                        && NOT_AFTER_BRACKET_RIGHT.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition,
-                                            getResources().getString(R.string.bracketright));
-                                    mBracketStatus--;
-                                } else if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                                        && NOT_AFTER_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition,
-                                            getResources().getString(R.string.bracketleft));
-                                    mBracketStatus++;
-                                }
-                            } else {
-                                if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                                        && NOT_AFTER_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition,
-                                            getResources().getString(R.string.bracketleft));
-                                    mBracketStatus++;
-                                }
-                            }
-                        }
-                    }
+                    bracketInput();
                     break;
                 case "√":
-                    if (mInputText.length() == 0) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                    } else {
-                        if (mCursorPosition == mInputText.length()) {
-                            if (mInputText.charAt(mCursorPosition - 1) != '.') {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else if (mCursorPosition == 0) {
-                            if (NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(0)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else {
-                            if (mInputText.charAt(mCursorPosition - 1) != '.'
-                                    && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        }
-                    }
+                    operateInputRoot(buttonString);
                     break;
                 case "log":
-                    if (mInputText.length() == 0) {
-                        updateInputView(mCursorPosition + 4, mCursorPosition,
-                                buttonString + getResources().getString(R.string.bracketleft));
-                        mBracketStatus++;
-                    } else {
-                        if (mCursorPosition == mInputText.length()) {
-                            if (mInputText.charAt(mCursorPosition - 1) != '.') {
-                                updateInputView(mCursorPosition + 4, mCursorPosition,
-                                        buttonString + getResources().getString(R.string.bracketleft));
-                                mBracketStatus++;
-                            }
-                        } else if (mCursorPosition == 0) {
-                            if (NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(0)) == -1) {
-                                updateInputView(mCursorPosition + 4, mCursorPosition,
-                                        buttonString + getResources().getString(R.string.bracketleft));
-                                mBracketStatus++;
-                            }
-                        } else {
-                            if (mInputText.charAt(mCursorPosition - 1) != '.'
-                                    && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                                updateInputView(mCursorPosition + 4, mCursorPosition,
-                                        buttonString + getResources().getString(R.string.bracketleft));
-                                mBracketStatus++;
-                            }
-                        }
-                    }
+                    operateInputLog(buttonString);
                     break;
                 case "tan":
                 case "cos":
                 case "sin":
-                    if (mInputText.length() == 0) {
-                        updateInputView(mCursorPosition + 4, mCursorPosition,
-                                buttonString + getResources().getString(R.string.bracketleft));
-                        mBracketStatus++;
-                    } else {
-                        if (mCursorPosition == mInputText.length()) {
-                            if (mInputText.charAt(mCursorPosition - 1) != '.') {
-                                updateInputView(mCursorPosition + 4, mCursorPosition,
-                                        buttonString + getResources().getString(R.string.bracketleft));
-                                mBracketStatus++;
-                            }
-                        } else if (mCursorPosition == 0) {
-                            if (NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(0)) == -1) {
-                                updateInputView(mCursorPosition + 4, mCursorPosition,
-                                        buttonString + getResources().getString(R.string.bracketleft));
-                                mBracketStatus++;
-                            }
-                        } else {
-                            if (mInputText.charAt(mCursorPosition - 1) != '.'
-                                    && NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                                updateInputView(mCursorPosition + 4, mCursorPosition,
-                                        buttonString + getResources().getString(R.string.bracketleft));
-                                mBracketStatus++;
-                            }
-                        }
-                    }
+                    operateInputTCS(buttonString);
                     break;
                 case "%":
                 case "!":
-                    if (mInputText.length() != 0 && mCursorPosition != 0) {
-                        if (mCursorPosition == mInputText.length()) {
-                            if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else {
-                            if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                                    && mInputText.charAt(mCursorPosition) != '.') {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        }
-                    }
-                    updateResultView();
+                    operateInputPF(buttonString);
                     break;
                 case "^":
-                    if (mInputText.length() != 0 && mCursorPosition != 0) {
-                        if (mCursorPosition == mInputText.length()) {
-                            if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else {
-                            if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                                    && NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        }
-                    }
+                    operateInputPow(buttonString);
                     break;
                 case "-":
-                    if (mInputText.length() == 0) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                    } else {
-                        if (mCursorPosition == mInputText.length()) {
-                            if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else if (mCursorPosition == 0) {
-                            if (NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(0)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else {
-                            if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                                    && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        }
-                    }
+                    operateInputMinus(buttonString);
                     break;
                 case "+":
                 case "×":
                 case "÷":
-                    if (mInputText.length() != 0 && mCursorPosition != 0) {
-                        if (mCursorPosition == mInputText.length()) {
-                            if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else {
-                            if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                                    && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        }
-                    }
+                    operateInputPMD(buttonString);
                     break;
                 case "π":
-                    if (mInputText.length() == 0) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                    } else {
-                        if (mCursorPosition == mInputText.length()) {
-                            if (mInputText.charAt(mCursorPosition - 1) != '.') {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else if (mCursorPosition == 0) {
-                            if (mInputText.charAt(0) != '.' && mInputText.charAt(0) != '!') {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else {
-                            if (mInputText.charAt(mCursorPosition - 1) != '.' && mInputText.charAt(mCursorPosition) != '.'
-                                    && mInputText.charAt(mCursorPosition) != '!') {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        }
-                    }
-                    updateResultView();
+                    piInput(buttonString);
                     break;
                 case ".":
-                    if (mInputText.length() != 0 && mCursorPosition != 0) {
-                        int indexFirst = 0;
-                        int indexSecond = mInputText.length() - 1;
-                        if (mCursorPosition == mInputText.length()) {
-                            for (int i = mCursorPosition - 1; i >= 0; i--) {
-                                if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
-                                    indexFirst = i;
-                                    break;
-                                }
-                            }
-                            if (indexFirst == 0) {
-                                if (mInputText.charAt(indexFirst) != '.') {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                                    updateResultView();
-                                }
-                            } else {
-                                if (mInputText.charAt(indexFirst) != '.' && indexFirst != mCursorPosition - 1) {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                                    updateResultView();
-                                }
-                            }
-
-                        } else {
-                            for (int i = mCursorPosition - 1; i >= 0; i--) {
-                                if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
-                                    indexFirst = i;
-                                    break;
-                                }
-                            }
-                            for (int i = mCursorPosition; i < mInputText.length(); i++) {
-                                if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
-                                    indexSecond = i;
-                                    break;
-                                }
-                            }
-                            if (indexFirst == 0 && indexSecond == mInputText.length() - 1) {
-                                if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                                    updateResultView();
-                                }
-                            } else if (indexFirst == 0 && indexSecond != mInputText.length() - 1) {
-                                if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
-                                        && indexSecond != mCursorPosition) {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                                    updateResultView();
-                                }
-                            } else if (indexFirst != 0 && indexSecond == mInputText.length() - 1
-                                    && indexFirst != mCursorPosition - 1) {
-                                if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                                    updateResultView();
-                                }
-                            } else {
-                                if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
-                                        && indexFirst != mCursorPosition - 1 && indexSecond != mCursorPosition) {
-                                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                                    updateResultView();
-                                }
-                            }
-
-                        }
-                    }
+                    pointInput(buttonString);
                     break;
                 default:
-                    if (mInputText.length() == 0) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                    } else {
-                        if (mInputText.length() == 1) {
-                            if (mInputText.charAt(0) == '0') {
-                                mInputText = new StringBuilder(buttonString);
-                                mInputView.setText(mInputText);
-                                mInputView.setSelection(mCursorPosition + 1);
-                            } else {
-                                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                            }
-                        } else {
-                            updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                        }
-                    }
-                    updateResultView();
+                    numInput(buttonString);
             }
         }
 
+    }
+
+    private void bracketInput() {
+        if (mInputText.length() == 0) {
+            updateInputView(mCursorPosition + 1, mCursorPosition,
+                    getResources().getString(R.string.bracketleft));
+            mBracketStatus++;
+        } else {
+            //不可存在于左括号之前
+            String NOT_BEFORE_BRACKET_LEFT = ".anotcsilg";
+            //不可存在于左括号之后
+            String NOT_AFTER_BRACKET_LEFT = ".+^÷×!%anoig";
+            if (mCursorPosition == mInputText.length()) {
+                if (mBracketStatus > 0) {
+                    if (NOT_BEFORE_BRACKET_RIGHT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                        updateInputView(mCursorPosition + 1, mCursorPosition,
+                                getResources().getString(R.string.bracketright));
+                        mBracketStatus--;
+                        updateResultView();
+                    } else if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                        updateInputView(mCursorPosition + 1, mCursorPosition,
+                                getResources().getString(R.string.bracketleft));
+                        mBracketStatus++;
+                    }
+                } else {
+                    if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                        updateInputView(mCursorPosition + 1, mCursorPosition,
+                                getResources().getString(R.string.bracketleft));
+                        mBracketStatus++;
+                    }
+                }
+
+            } else if (mCursorPosition == 0) {
+                if (NOT_AFTER_BRACKET_LEFT.indexOf(mInputText.charAt(0)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition,
+                            getResources().getString(R.string.bracketleft));
+                    mBracketStatus++;
+                }
+            } else {
+                int countBracket = 0;
+                for (int i = 0; i < mCursorPosition + 1; i++) {
+                    if (mInputText.charAt(i) == '(') countBracket++;
+                    if (mInputText.charAt(i) == ')') countBracket--;
+                }
+                if (countBracket > 0) {
+                    //不可存在于右括号之后
+                    String NOT_AFTER_BRACKET_RIGHT = ".anoig";
+                    if (NOT_BEFORE_BRACKET_RIGHT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
+                            && NOT_AFTER_BRACKET_RIGHT.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                        updateInputView(mCursorPosition + 1, mCursorPosition,
+                                getResources().getString(R.string.bracketright));
+                        mBracketStatus--;
+                    } else if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
+                            && NOT_AFTER_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                        updateInputView(mCursorPosition + 1, mCursorPosition,
+                                getResources().getString(R.string.bracketleft));
+                        mBracketStatus++;
+                    }
+                } else {
+                    if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
+                            && NOT_AFTER_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                        updateInputView(mCursorPosition + 1, mCursorPosition,
+                                getResources().getString(R.string.bracketleft));
+                        mBracketStatus++;
+                    }
+                }
+            }
+        }
+    }
+
+    private void operateInputRoot(String buttonString) {
+        if (mInputText.length() == 0) {
+            updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+        } else {
+            if (mCursorPosition == mInputText.length()) {
+                if (mInputText.charAt(mCursorPosition - 1) != '.') {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else if (mCursorPosition == 0) {
+                if (NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(0)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else {
+                if (mInputText.charAt(mCursorPosition - 1) != '.'
+                        && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            }
+        }
+    }
+
+    private void operateInputLog(String buttonString) {
+        if (mInputText.length() == 0) {
+            updateInputView(mCursorPosition + 4, mCursorPosition,
+                    buttonString + getResources().getString(R.string.bracketleft));
+            mBracketStatus++;
+        } else {
+            if (mCursorPosition == mInputText.length()) {
+                if (mInputText.charAt(mCursorPosition - 1) != '.') {
+                    updateInputView(mCursorPosition + 4, mCursorPosition,
+                            buttonString + getResources().getString(R.string.bracketleft));
+                    mBracketStatus++;
+                }
+            } else if (mCursorPosition == 0) {
+                if (NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(0)) == -1) {
+                    updateInputView(mCursorPosition + 4, mCursorPosition,
+                            buttonString + getResources().getString(R.string.bracketleft));
+                    mBracketStatus++;
+                }
+            } else {
+                if (mInputText.charAt(mCursorPosition - 1) != '.'
+                        && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                    updateInputView(mCursorPosition + 4, mCursorPosition,
+                            buttonString + getResources().getString(R.string.bracketleft));
+                    mBracketStatus++;
+                }
+            }
+        }
+    }
+
+    private void operateInputTCS(String buttonString) {
+        if (mInputText.length() == 0) {
+            updateInputView(mCursorPosition + 4, mCursorPosition,
+                    buttonString + getResources().getString(R.string.bracketleft));
+            mBracketStatus++;
+        } else {
+            if (mCursorPosition == mInputText.length()) {
+                if (mInputText.charAt(mCursorPosition - 1) != '.') {
+                    updateInputView(mCursorPosition + 4, mCursorPosition,
+                            buttonString + getResources().getString(R.string.bracketleft));
+                    mBracketStatus++;
+                }
+            } else if (mCursorPosition == 0) {
+                if (NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(0)) == -1) {
+                    updateInputView(mCursorPosition + 4, mCursorPosition,
+                            buttonString + getResources().getString(R.string.bracketleft));
+                    mBracketStatus++;
+                }
+            } else {
+                if (mInputText.charAt(mCursorPosition - 1) != '.'
+                        && NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                    updateInputView(mCursorPosition + 4, mCursorPosition,
+                            buttonString + getResources().getString(R.string.bracketleft));
+                    mBracketStatus++;
+                }
+            }
+        }
+    }
+
+    private void operateInputPF(String buttonString) {
+        if (mInputText.length() != 0 && mCursorPosition != 0) {
+            if (mCursorPosition == mInputText.length()) {
+                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else {
+                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
+                        && mInputText.charAt(mCursorPosition) != '.') {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            }
+        }
+        updateResultView();
+    }
+
+    private void operateInputPow(String buttonString) {
+        if (mInputText.length() != 0 && mCursorPosition != 0) {
+            if (mCursorPosition == mInputText.length()) {
+                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else {
+                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
+                        && NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            }
+        }
+    }
+
+    private void operateInputMinus(String buttonString) {
+        if (mInputText.length() == 0) {
+            updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+        } else {
+            if (mCursorPosition == mInputText.length()) {
+                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else if (mCursorPosition == 0) {
+                if (NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(0)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else {
+                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
+                        && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            }
+        }
+    }
+
+    private void operateInputPMD(String buttonString) {
+        if (mInputText.length() != 0 && mCursorPosition != 0) {
+            if (mCursorPosition == mInputText.length()) {
+                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else {
+                if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
+                        && NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            }
+        }
+    }
+
+    private void piInput(String buttonString) {
+        if (mInputText.length() == 0) {
+            updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+        } else {
+            if (mCursorPosition == mInputText.length()) {
+                if (mInputText.charAt(mCursorPosition - 1) != '.') {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else if (mCursorPosition == 0) {
+                if (mInputText.charAt(0) != '.' && mInputText.charAt(0) != '!') {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else {
+                if (mInputText.charAt(mCursorPosition - 1) != '.' && mInputText.charAt(mCursorPosition) != '.'
+                        && mInputText.charAt(mCursorPosition) != '!') {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            }
+        }
+        updateResultView();
+    }
+
+    private void pointInput(String buttonString) {
+        if (mInputText.length() != 0 && mCursorPosition != 0) {
+            int indexFirst = 0;
+            int indexSecond = mInputText.length() - 1;
+            if (mCursorPosition == mInputText.length()) {
+                for (int i = mCursorPosition - 1; i >= 0; i--) {
+                    if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
+                        indexFirst = i;
+                        break;
+                    }
+                }
+                if (indexFirst == 0) {
+                    if (mInputText.charAt(indexFirst) != '.') {
+                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                        updateResultView();
+                    }
+                } else {
+                    if (mInputText.charAt(indexFirst) != '.' && indexFirst != mCursorPosition - 1) {
+                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                        updateResultView();
+                    }
+                }
+
+            } else {
+                for (int i = mCursorPosition - 1; i >= 0; i--) {
+                    if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
+                        indexFirst = i;
+                        break;
+                    }
+                }
+                for (int i = mCursorPosition; i < mInputText.length(); i++) {
+                    if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
+                        indexSecond = i;
+                        break;
+                    }
+                }
+                if (indexFirst == 0 && indexSecond == mInputText.length() - 1) {
+                    if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
+                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                        updateResultView();
+                    }
+                } else if (indexFirst == 0 && indexSecond != mInputText.length() - 1) {
+                    if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
+                            && indexSecond != mCursorPosition) {
+                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                        updateResultView();
+                    }
+                } else if (indexFirst != 0 && indexSecond == mInputText.length() - 1
+                        && indexFirst != mCursorPosition - 1) {
+                    if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
+                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                        updateResultView();
+                    }
+                } else {
+                    if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
+                            && indexFirst != mCursorPosition - 1 && indexSecond != mCursorPosition) {
+                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                        updateResultView();
+                    }
+                }
+
+            }
+        }
+    }
+
+    private void numInput(String buttonString) {
+        if (mInputText.length() == 0) {
+            updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+        } else {
+            if (mInputText.length() == 1) {
+                if (mInputText.charAt(0) == '0') {
+                    mInputText = new StringBuilder(buttonString);
+                    mInputView.setText(mInputText);
+                    mInputView.setSelection(mCursorPosition + 1);
+                } else {
+                    updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                }
+            } else {
+                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+            }
+        }
+        updateResultView();
     }
 
     private void updateInputView(int cursorPosition, int insertPosition, String insertText) {//更新输入框显示
