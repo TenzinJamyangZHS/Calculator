@@ -298,7 +298,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-    private void bracketInput() {
+    private void bracketInput() {//输入括号
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 1, mCursorPosition,
                     getResources().getString(R.string.bracketleft));
@@ -366,7 +366,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void operateInputRoot(String buttonString) {
+    private void operateInputRoot(String buttonString) {//输入根号
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
         } else {
@@ -387,7 +387,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void operateInputLog(String buttonString) {
+    private void operateInputLog(String buttonString) {//输入log
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 4, mCursorPosition,
                     buttonString + getResources().getString(R.string.bracketleft));
@@ -416,7 +416,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void operateInputTCS(String buttonString) {
+    private void operateInputTCS(String buttonString) {//输入三角函数
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 4, mCursorPosition,
                     buttonString + getResources().getString(R.string.bracketleft));
@@ -445,7 +445,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void operateInputPF(String buttonString) {
+    private void operateInputPF(String buttonString) {//输入百分比与阶乘
         if (mInputText.length() != 0 && mCursorPosition != 0) {
             if (mCursorPosition == mInputText.length()) {
                 if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
@@ -461,7 +461,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         updateResultView();
     }
 
-    private void operateInputPow(String buttonString) {
+    private void operateInputPow(String buttonString) {//输入次方
         if (mInputText.length() != 0 && mCursorPosition != 0) {
             if (mCursorPosition == mInputText.length()) {
                 if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
@@ -476,7 +476,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void operateInputMinus(String buttonString) {
+    private void operateInputMinus(String buttonString) {//输入减号
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
         } else {
@@ -497,7 +497,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void operateInputPMD(String buttonString) {
+    private void operateInputPMD(String buttonString) {//输入加乘除
         if (mInputText.length() != 0 && mCursorPosition != 0) {
             if (mCursorPosition == mInputText.length()) {
                 if (NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
@@ -512,7 +512,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void piInput(String buttonString) {
+    private void piInput(String buttonString) {//输入圆周率
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
         } else {
@@ -534,72 +534,83 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         updateResultView();
     }
 
-    private void pointInput(String buttonString) {
-        if (mInputText.length() != 0 && mCursorPosition != 0) {
-            int indexFirst = 0;
-            int indexSecond = mInputText.length() - 1;
-            if (mCursorPosition == mInputText.length()) {
-                for (int i = mCursorPosition - 1; i >= 0; i--) {
-                    if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
-                        indexFirst = i;
-                        break;
-                    }
-                }
-                if (indexFirst == 0) {
-                    if (mInputText.charAt(indexFirst) != '.') {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                        updateResultView();
-                    }
-                } else {
-                    if (mInputText.charAt(indexFirst) != '.' && indexFirst != mCursorPosition - 1) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                        updateResultView();
-                    }
-                }
-
-            } else {
-                for (int i = mCursorPosition - 1; i >= 0; i--) {
-                    if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
-                        indexFirst = i;
-                        break;
-                    }
-                }
-                for (int i = mCursorPosition; i < mInputText.length(); i++) {
-                    if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
-                        indexSecond = i;
-                        break;
-                    }
-                }
-                if (indexFirst == 0 && indexSecond == mInputText.length() - 1) {
-                    if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                        updateResultView();
-                    }
-                } else if (indexFirst == 0 && indexSecond != mInputText.length() - 1) {
-                    if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
-                            && indexSecond != mCursorPosition) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                        updateResultView();
-                    }
-                } else if (indexFirst != 0 && indexSecond == mInputText.length() - 1
-                        && indexFirst != mCursorPosition - 1) {
-                    if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                        updateResultView();
-                    }
-                } else {
-                    if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
-                            && indexFirst != mCursorPosition - 1 && indexSecond != mCursorPosition) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
-                        updateResultView();
-                    }
-                }
-
+    private void pointInput(String buttonString) {//输入小数点
+        if (mInputText.length() != 0 && mCursorPosition != 0) {//小数点不能开头输入
+            int indexFirst = 0;//当前输入所在位置的数字开始点
+            int indexSecond = mInputText.length() - 1;//当前输入所在位置的数字结尾点
+            if (mCursorPosition == mInputText.length()) {//若输入位置在结尾，判断所在位置的数字是否已有小数点，向前判断
+                pointCheckEnd(indexFirst, buttonString);
+            } else {//若输入位置不在结尾，判断所在位置的数字是否已有小数点，前后判断
+                pointCheck(indexFirst, indexSecond, buttonString);
             }
         }
     }
 
-    private void numInput(String buttonString) {
+    private void pointCheck(int indexFirst, int indexSecond, String buttonString) {
+        indexFirst = getNumberStart(indexFirst);
+        indexSecond = getNumberEnd(indexSecond);
+        if (indexFirst == 0 && indexSecond == mInputText.length() - 1) {
+            if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
+                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                updateResultView();
+            }
+        } else if (indexFirst == 0 && indexSecond != mInputText.length() - 1) {
+            if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
+                    && indexSecond != mCursorPosition) {
+                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                updateResultView();
+            }
+        } else if (indexFirst != 0 && indexSecond == mInputText.length() - 1
+                && indexFirst != mCursorPosition - 1) {
+            if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.') {
+                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                updateResultView();
+            }
+        } else {
+            if (mInputText.charAt(indexFirst) != '.' && mInputText.charAt(indexSecond) != '.'
+                    && indexFirst != mCursorPosition - 1 && indexSecond != mCursorPosition) {
+                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                updateResultView();
+            }
+        }
+    }
+
+    private int getNumberEnd(int indexSecond) {
+        for (int i = mCursorPosition; i < mInputText.length(); i++) {
+            if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
+                indexSecond = i;
+                break;
+            }
+        }
+        return indexSecond;
+    }
+
+    private int getNumberStart(int indexFirst) {
+        for (int i = mCursorPosition - 1; i >= 0; i--) {
+            if (NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1) {
+                indexFirst = i;
+                break;
+            }
+        }
+        return indexFirst;
+    }
+
+    private void pointCheckEnd(int indexFirst, String buttonString) {
+        indexFirst = getNumberStart(indexFirst);
+        if (indexFirst == 0) {
+            if (mInputText.charAt(indexFirst) != '.') {
+                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                updateResultView();
+            }
+        } else {
+            if (mInputText.charAt(indexFirst) != '.' && indexFirst != mCursorPosition - 1) {
+                updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
+                updateResultView();
+            }
+        }
+    }
+
+    private void numInput(String buttonString) {//输入数字
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
         } else {
@@ -607,7 +618,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 if (mInputText.charAt(0) == '0') {
                     mInputText = new StringBuilder(buttonString);
                     mInputView.setText(mInputText);
-                    mInputView.setSelection(mCursorPosition + 1);
+                    mInputView.setSelection(1);
                 } else {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
