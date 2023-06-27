@@ -33,7 +33,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private StringBuilder mInputText;//记录输入内容
     private int mBracketStatus = 0;//记录括号状态
     private int mCursorPosition;//记录指针位置
-    private final String NOT_BEFORE_BRACKET_RIGHT = ".+-(tancosilg√^÷×";//不可存在于右括号之前
     private final String NOT_AFTER_OPERATOR_1 = ".+-^÷×!%";//根号等后不可存在
     private final String NOT_AFTER_OPERATOR_2 = ".+^÷×!%";//log等后不可存在
     private final String NOT_BEFORE_OPERATOR = ".+-^÷×(√";//次方等前不可存在
@@ -42,6 +41,8 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     public static final String TOO_LARGE = "Infinity";//过大提醒
     private boolean canCalculate;//检测是否可以运算
     private StringBuilder mSavedText;
+    private final String NOT_AFTER_ANY = "anoig";//不能相邻后者
+    private final String NOT_BEFORE_ANY = "anotcsilg"; //不能相邻前者
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -234,10 +235,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         boolean inputOk = true;//输入规则检测
         if (mInputText.length() != 0 && mCursorPosition != 0//当输入框内容不为空 指针不在0位 不在末尾时 做以下判断 相邻的内容是否违规
                 && mCursorPosition != mInputText.length()) {
-            //不能相邻前者
-            String NOT_BEFORE_ANY = "anotcsilg";
-            //不能相邻后者
-            String NOT_AFTER_ANY = "anoig";
             if (NOT_BEFORE_ANY.indexOf(mInputText.charAt(mCursorPosition - 1)) != -1
                     || NOT_AFTER_ANY.indexOf(mInputText.charAt(mCursorPosition)) != -1) {
                 inputOk = false;
@@ -300,70 +297,85 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private void bracketInput() {//输入括号
         if (mInputText.length() == 0) {
-            updateInputView(mCursorPosition + 1, mCursorPosition,
-                    getResources().getString(R.string.bracketleft));
-            mBracketStatus++;
+            addBracketLeft();
         } else {
-            //不可存在于左括号之前
-            String NOT_BEFORE_BRACKET_LEFT = ".anotcsilg";
-            //不可存在于左括号之后
-            String NOT_AFTER_BRACKET_LEFT = ".+^÷×!%anoig";
             if (mCursorPosition == mInputText.length()) {
-                if (mBracketStatus > 0) {
-                    if (NOT_BEFORE_BRACKET_RIGHT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition,
-                                getResources().getString(R.string.bracketright));
-                        mBracketStatus--;
-                        updateResultView();
-                    } else if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition,
-                                getResources().getString(R.string.bracketleft));
-                        mBracketStatus++;
-                    }
-                } else {
-                    if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition,
-                                getResources().getString(R.string.bracketleft));
-                        mBracketStatus++;
-                    }
-                }
-
+                bracketCheckEnd();
             } else if (mCursorPosition == 0) {
-                if (NOT_AFTER_BRACKET_LEFT.indexOf(mInputText.charAt(0)) == -1) {
-                    updateInputView(mCursorPosition + 1, mCursorPosition,
-                            getResources().getString(R.string.bracketleft));
-                    mBracketStatus++;
-                }
+                bracketCheckStart();
             } else {
-                int countBracket = 0;
-                for (int i = 0; i < mCursorPosition + 1; i++) {
-                    if (mInputText.charAt(i) == '(') countBracket++;
-                    if (mInputText.charAt(i) == ')') countBracket--;
-                }
-                if (countBracket > 0) {
-                    //不可存在于右括号之后
-                    String NOT_AFTER_BRACKET_RIGHT = ".anoig";
-                    if (NOT_BEFORE_BRACKET_RIGHT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                            && NOT_AFTER_BRACKET_RIGHT.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition,
-                                getResources().getString(R.string.bracketright));
-                        mBracketStatus--;
-                    } else if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                            && NOT_AFTER_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition,
-                                getResources().getString(R.string.bracketleft));
-                        mBracketStatus++;
-                    }
-                } else {
-                    if (NOT_BEFORE_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
-                            && NOT_AFTER_BRACKET_LEFT.indexOf(mInputText.charAt(mCursorPosition)) == -1) {
-                        updateInputView(mCursorPosition + 1, mCursorPosition,
-                                getResources().getString(R.string.bracketleft));
-                        mBracketStatus++;
-                    }
-                }
+                bracketCheck();
             }
         }
+    }
+
+    private void bracketCheck() {//检测能否输入括号
+        int countBracket = 0;//统计已有括号状态
+        for (int i = 0; i < mCursorPosition + 1; i++) {
+            if (mInputText.charAt(i) == '(') countBracket++;
+            if (mInputText.charAt(i) == ')') countBracket--;
+        }
+        if (countBracket > 0) {
+            if (bracketRightCheckBefore()) {
+                addBracketRight();
+            } else if (bracketLeftCheck()) {
+                addBracketLeft();
+            }
+        } else {
+            if (bracketLeftCheck()) {
+                addBracketLeft();
+            }
+        }
+    }
+
+    private boolean bracketLeftCheck() {//左括号检测
+        return bracketLeftCheckBefore()
+                && NOT_AFTER_ANY.indexOf(mInputText.charAt(mCursorPosition)) == -1
+                && NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1 ;
+    }
+
+    private boolean bracketRightCheckBefore() {//右括号检测前
+        return NOT_BEFORE_ANY.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
+                && NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1;
+    }
+
+    private void addBracketLeft() {//添加做括号
+        updateInputView(mCursorPosition + 1, mCursorPosition,
+                getResources().getString(R.string.bracketleft));
+        mBracketStatus++;
+
+    }
+
+    private void addBracketRight() {//添加右括号
+        updateInputView(mCursorPosition + 1, mCursorPosition,
+                getResources().getString(R.string.bracketright));
+        mBracketStatus--;
+        updateResultView();
+    }
+
+    private void bracketCheckStart() {//检测能否输入括号开端
+        if (bracketLeftCheck()) {
+            addBracketLeft();
+        }
+    }
+
+    private void bracketCheckEnd() {//检测能否输入括号结尾
+        if (mBracketStatus > 0) {
+            if (bracketRightCheckBefore()) {
+                addBracketRight();
+            } else if (bracketLeftCheckBefore()) {
+                addBracketLeft();
+            }
+        } else {
+            if (bracketLeftCheckBefore()) {
+                addBracketLeft();
+            }
+        }
+    }
+
+    private boolean bracketLeftCheckBefore() {//左括号检测前
+        return NOT_BEFORE_ANY.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1
+                && mInputText.charAt(mCursorPosition - 1) != '.';
     }
 
     private void operateInputRoot(String buttonString) {//输入根号
@@ -850,7 +862,8 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 if (NOT_BEFORE_OPERATOR.contains(inputList.get(i)) && NOT_AFTER_OPERATOR_1.contains(inputList.get(i + 1))) {
                     canCalculate = false;
                 }
-                if (NOT_BEFORE_BRACKET_RIGHT.contains(inputList.get(i))//不可与右括号相邻
+                if (NOT_BEFORE_ANY.indexOf(inputList.get(i).charAt(inputList.get(i).length()-1)) != -1
+                        && NOT_BEFORE_OPERATOR.indexOf(inputList.get(i).charAt(inputList.get(i).length()-1)) != -1
                         && inputList.get(i + 1).equals(getResources().getString(R.string.bracketright))) {
                     canCalculate = false;
                 }
