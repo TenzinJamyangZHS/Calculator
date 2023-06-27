@@ -810,13 +810,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private void canCalculated(ArrayList<String> inputList) {//检测是否可以运算
         canCalculate = mBracketStatus == 0;
         if (inputList.size() > 0) {
-            if (NOT_AFTER_OPERATOR_2.contains(inputList.get(0))) {
+            if (NOT_AFTER_OPERATOR_2.contains(inputList.get(0))) {//这些不能开头
                 canCalculate = false;
             }
-            if (NOT_BEFORE_OPERATOR.contains(inputList.get(inputList.size() - 1))) {
+            if (NOT_BEFORE_OPERATOR.contains(inputList.get(inputList.size() - 1))) {//这些不能结尾
                 canCalculate = false;
             }
-            if (inputList.contains(TOO_LARGE) || inputList.contains("-" + TOO_LARGE)) {
+            if (inputList.contains(TOO_LARGE) || inputList.contains("-" + TOO_LARGE)) {//出现超出运算范围
                 canCalculate = false;
             }
 
@@ -830,37 +830,37 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                     }
                     if (countPoint > 1 || inputList.get(i).charAt(0) == '.'
                             || inputList.get(i).charAt(inputList.get(i).length() - 1) == '.') {
-                        canCalculate = false;
+                        canCalculate = false;//数字不能以小数点开头或结尾或包含多个小数点
                     }
                 }
 
             }
-            for (int i = 0; i < inputList.size() - 1; i++) {
+            for (int i = 0; i < inputList.size() - 1; i++) {//不可相邻的符号
                 if (NOT_BEFORE_OPERATOR.contains(inputList.get(i)) && NOT_AFTER_OPERATOR_1.contains(inputList.get(i + 1))) {
                     canCalculate = false;
                 }
-                if (NOT_BEFORE_BRACKET_RIGHT.contains(inputList.get(i))
+                if (NOT_BEFORE_BRACKET_RIGHT.contains(inputList.get(i))//不可与右括号相邻
                         && inputList.get(i + 1).equals(getResources().getString(R.string.bracketright))) {
                     canCalculate = false;
                 }
-                if (inputList.get(i).equals(getResources().getString(R.string.root))
+                if (inputList.get(i).equals(getResources().getString(R.string.root))//根号不能跟负数
                         && inputList.get(i + 1).equals(getResources().getString(R.string.minus))) {
                     canCalculate = false;
                 }
-                if (inputList.get(i).equals(getResources().getString(R.string.divide))
+                if (inputList.get(i).equals(getResources().getString(R.string.divide))//不可以除以0
                         && inputList.get(i + 1).equals(getResources().getString(R.string.zero))) {
                     canCalculate = false;
                 }
 
             }
-            for (int i = 0; i < inputList.size() - 2; i++) {
+            for (int i = 0; i < inputList.size() - 2; i++) {//log运算检测
                 if (inputList.get(i).equals(getResources().getString(R.string.log))
                         && inputList.get(i + 1).equals(getResources().getString(R.string.bracketleft))
                         && NOT_AFTER_OPERATOR_1.contains(inputList.get(i + 2))) {
                     canCalculate = false;
                 }
             }
-            for (int i = inputList.size() - 1; i > 0; i--) {
+            for (int i = inputList.size() - 1; i > 0; i--) {//负数小数不能阶乘
                 if (inputList.get(i).equals(getResources().getString(R.string.factorial))
                         && inputList.get(i - 1).contains(getResources().getString(R.string.point))) {
                     canCalculate = false;
@@ -1189,28 +1189,28 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void checkDelete(boolean isEnd) {
+    private void checkDelete(boolean isEnd) {//检测删除规则
         if (mInputText.charAt(mCursorPosition - 1) == '(') {
             if (mCursorPosition > 1) {
                 if (mInputText.charAt(mCursorPosition - 2) == 'n' || mInputText.charAt(mCursorPosition - 2) == 'g'
                         || mInputText.charAt(mCursorPosition - 2) == 's') {//log tan sin cos
-                    isEndCheck(isEnd,4);
+                    isEndCheck(isEnd, 4);
                 } else {
-                    isEndCheck(isEnd,1);
+                    isEndCheck(isEnd, 1);
                 }
             } else {
-                isEndCheck(isEnd,1);
+                isEndCheck(isEnd, 1);
             }
             mBracketStatus--;
         } else if (mInputText.charAt(mCursorPosition - 1) == ')') {
-            isEndCheck(isEnd,1);
+            isEndCheck(isEnd, 1);
             mBracketStatus++;
         } else {
-            isEndCheck(isEnd,1);
+            isEndCheck(isEnd, 1);
         }
     }
 
-    private void isEndCheck(boolean isEnd, int i) {
+    private void isEndCheck(boolean isEnd, int i) {//组合删除功能以便调用
         if (isEnd) {
             deleteEndFunction(i);
         } else {
