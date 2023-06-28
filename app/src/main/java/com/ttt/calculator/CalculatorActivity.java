@@ -8,6 +8,8 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -33,15 +35,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private StringBuilder mInputText;//记录输入内容
     private int mBracketStatus = 0;//记录括号状态
     private int mCursorPosition;//记录指针位置
-    private final String NOT_AFTER_OPERATOR_1 = ".+-^÷×!%";//根号等后不可存在
-    private final String NOT_AFTER_OPERATOR_2 = ".+^÷×!%";//log等后不可存在
-    private final String NOT_BEFORE_OPERATOR = ".+-^÷×(√";//次方等前不可存在
-    private final String NUMBER_NO_POINT = "0123456789";//所有数字不包含小数点
-    private final String NUMBER_POINT = ".0123456789";//所有数字包含小数点
     public static final String TOO_LARGE = "Infinity";//过大提醒
     private boolean canCalculate;//检测是否可以运算
     private StringBuilder mSavedText;//点击等号后记录之前输入的内容
-    private final String NOT_BEFORE_ANY = "anotcsilg"; //不能相邻前者
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -166,6 +162,45 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         mInputView.setTextSize((float) (height / 30));
         mResultView.setTextSize((float) (height / 55));
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mInputView.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.length()<10){
+                        mInputView.setTextSize((float) (height / 30));
+                    } else if (s.length()>=10 && s.length()<11){
+                        mInputView.setTextSize((float) (height / 34));
+                    } else if (s.length()>=11 && s.length()<12){
+                        mInputView.setTextSize((float) (height / 37));
+                    } else if (s.length()>=12 && s.length()<13){
+                        mInputView.setTextSize((float) (height / 40));
+                    } else if (s.length()>=13 && s.length()<14){
+                        mInputView.setTextSize((float) (height / 43));
+                    } else if (s.length()>=14 && s.length()<15){
+                        mInputView.setTextSize((float) (height / 46));
+                    } else if (s.length()>=15 && s.length()<16){
+                        mInputView.setTextSize((float) (height / 49));
+                    } else if (s.length()>=16 && s.length()<17){
+                        mInputView.setTextSize((float) (height / 52));
+                    } else if (s.length()>=17 && s.length()<18){
+                        mInputView.setTextSize((float) (height / 55));
+                    } else if (s.length()>=18 && s.length()<19){
+                        mInputView.setTextSize((float) (height / 58));
+                    } else if (s.length()>=19){
+                        mInputView.setTextSize((float) (height / 60));
+                    }
+
+                }
+            });
             mMoreButton.setTextSize((float) (height / 180));
             mClearButton.setTextSize((float) (height / 70));
             mEqualsButton.setTextSize((float) (height / 70));
@@ -234,7 +269,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         boolean inputOk = true;//输入规则检测
         if (notEmptyNotStart()//当输入框内容不为空 指针不在0位 不在末尾时 做以下判断 相邻的内容是否违规
                 && mCursorPosition != mInputText.length()) {
-            if (!notBeforeAny() || !notAfterAny()) {
+            if (!notBeforeAny(String.valueOf(mInputText),mCursorPosition - 1) || !notAfterAny()) {
                 inputOk = false;
             }
         }
@@ -298,17 +333,23 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         return mInputText.length() != 0 && mCursorPosition != 0;
     }
 
-    private boolean numberNoPoint(int i) {
-        return NUMBER_NO_POINT.indexOf(mInputText.charAt(i)) == -1;
+    private boolean numberNoPoint(String s, int i) {
+        //所有数字不包含小数点
+        String NUMBER_NO_POINT = "0123456789";
+        return NUMBER_NO_POINT.indexOf(s.charAt(i)) == -1;
     }
 
-    private boolean numberPoint(int i) {
-        return NUMBER_POINT.indexOf(mInputText.charAt(i)) == -1;
+    private boolean numberPoint(String s, int i) {
+        //所有数字包含小数点
+        String NUMBER_POINT = ".0123456789";
+        return NUMBER_POINT.indexOf(s.charAt(i)) == -1;
     }
 
 
-    private boolean notAfterOperator1(int num) {
-        return NOT_AFTER_OPERATOR_1.indexOf(mInputText.charAt(num)) == -1;
+    private boolean notAfterOperator1(String s,int num) {
+        //根号等后不可存在
+        String NOT_AFTER_OPERATOR_1 = ".+-^÷×!%";
+        return NOT_AFTER_OPERATOR_1.indexOf(s.charAt(num)) == -1;
     }
 
     private boolean notAfterAny() {
@@ -317,16 +358,22 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         return NOT_AFTER_ANY.indexOf(mInputText.charAt(mCursorPosition)) == -1;
     }
 
-    private boolean notBeforeAny() {
-        return NOT_BEFORE_ANY.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1;
+    private boolean notBeforeAny(String s, int num) {
+        //不能相邻前者
+        String NOT_BEFORE_ANY = "anotcsilg";
+        return NOT_BEFORE_ANY.indexOf(s.charAt(num)) == -1;
     }
 
-    private boolean notAfterOperator2(int num) {
-        return NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(num)) == -1;
+    private boolean notAfterOperator2(String s, int num) {
+        //log等后不可存在
+        String NOT_AFTER_OPERATOR_2 = ".+^÷×!%";
+        return NOT_AFTER_OPERATOR_2.indexOf(s.charAt(num)) == -1;
     }
 
-    private boolean notBeforeOperator() {
-        return NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1;
+    private boolean notBeforeOperator(String s, int num) {
+        //次方等前不可存在
+        String NOT_BEFORE_OPERATOR = ".+-^÷×(√";
+        return NOT_BEFORE_OPERATOR.indexOf(s.charAt(num)) == -1;
     }
 
     private boolean notPoint(int num) {
@@ -395,15 +442,17 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private boolean bracketLeftCheck() {//左括号检测
         return bracketLeftCheckBefore()
                 && notAfterAny()
-                && notAfterOperator2(mCursorPosition);
+                && notAfterOperator2(String.valueOf(mInputText),mCursorPosition);
     }
 
     private boolean bracketRightCheckBefore() {//右括号检测前
-        return notBeforeAny() && notBeforeOperator();
+        return notBeforeAny(String.valueOf(mInputText),mCursorPosition - 1)
+                && notBeforeOperator(String.valueOf(mInputText),mCursorPosition - 1);
     }
 
     private boolean bracketLeftCheckBefore() {//左括号检测前
-        return notBeforeAny() && notPoint(mCursorPosition - 1);
+        return notBeforeAny(String.valueOf(mInputText),mCursorPosition - 1)
+                && notPoint(mCursorPosition - 1);
     }
 
     private void addBracketLeft() {//添加做括号
@@ -411,7 +460,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             mSavedText.setLength(0);
         }
         updateInputView(mCursorPosition + 1, mCursorPosition,
-                getResources().getString(R.string.bracketleft));
+                getString(R.string.bracketleft));
         mBracketStatus++;
 
     }
@@ -421,7 +470,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             mSavedText.setLength(0);
         }
         updateInputView(mCursorPosition + 1, mCursorPosition,
-                getResources().getString(R.string.bracketright));
+                getString(R.string.bracketright));
         mBracketStatus--;
         updateResultView();
     }
@@ -440,7 +489,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else if (mCursorPosition == 0) {
-                if (notAfterOperator1(0)) {
+                if (notAfterOperator1(String.valueOf(mInputText),0)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                     if (mInputText.length() > 1) {
                         updateResultView();
@@ -448,7 +497,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 }
             } else {
                 if (notPoint(mCursorPosition - 1)
-                        && notAfterOperator1(mCursorPosition)) {
+                        && notAfterOperator1(String.valueOf(mInputText),mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                     updateResultView();
                 }
@@ -462,26 +511,26 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 4, mCursorPosition,
-                    buttonString + getResources().getString(R.string.bracketleft));
+                    buttonString + getString(R.string.bracketleft));
             mBracketStatus++;
         } else {
             if (mCursorPosition == mInputText.length()) {
                 if (notPoint(mCursorPosition - 1)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
-                            buttonString + getResources().getString(R.string.bracketleft));
+                            buttonString + getString(R.string.bracketleft));
                     mBracketStatus++;
                 }
             } else if (mCursorPosition == 0) {
-                if (notAfterOperator1(0)) {
+                if (notAfterOperator1(String.valueOf(mInputText),0)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
-                            buttonString + getResources().getString(R.string.bracketleft));
+                            buttonString + getString(R.string.bracketleft));
                     mBracketStatus++;
                 }
             } else {
                 if (notPoint(mCursorPosition - 1)
-                        && notAfterOperator1(mCursorPosition)) {
+                        && notAfterOperator1(String.valueOf(mInputText),mCursorPosition)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
-                            buttonString + getResources().getString(R.string.bracketleft));
+                            buttonString + getString(R.string.bracketleft));
                     mBracketStatus++;
                 }
             }
@@ -494,26 +543,26 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         if (mInputText.length() == 0) {
             updateInputView(mCursorPosition + 4, mCursorPosition,
-                    buttonString + getResources().getString(R.string.bracketleft));
+                    buttonString + getString(R.string.bracketleft));
             mBracketStatus++;
         } else {
             if (mCursorPosition == mInputText.length()) {
                 if (notPoint(mCursorPosition - 1)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
-                            buttonString + getResources().getString(R.string.bracketleft));
+                            buttonString + getString(R.string.bracketleft));
                     mBracketStatus++;
                 }
             } else if (mCursorPosition == 0) {
-                if (notAfterOperator2(0)) {
+                if (notAfterOperator2(String.valueOf(mInputText),0)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
-                            buttonString + getResources().getString(R.string.bracketleft));
+                            buttonString + getString(R.string.bracketleft));
                     mBracketStatus++;
                 }
             } else {
                 if (notPoint(mCursorPosition - 1)
-                        && notAfterOperator2(mCursorPosition)) {
+                        && notAfterOperator2(String.valueOf(mInputText),mCursorPosition)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
-                            buttonString + getResources().getString(R.string.bracketleft));
+                            buttonString + getString(R.string.bracketleft));
                     mBracketStatus++;
                 }
             }
@@ -526,11 +575,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         if (notEmptyNotStart()) {
             if (mCursorPosition == mInputText.length()) {
-                if (notBeforeOperator()) {
+                if (notBeforeOperator(String.valueOf(mInputText),mCursorPosition - 1)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else {
-                if (notBeforeOperator()
+                if (notBeforeOperator(String.valueOf(mInputText),mCursorPosition - 1)
                         && notPoint(mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
@@ -545,12 +594,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         if (notEmptyNotStart()) {
             if (mCursorPosition == mInputText.length()) {
-                if (notBeforeOperator()) {
+                if (notBeforeOperator(String.valueOf(mInputText),mCursorPosition - 1)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else {
-                if (notBeforeOperator()
-                        && notAfterOperator2(mCursorPosition)) {
+                if (notBeforeOperator(String.valueOf(mInputText),mCursorPosition - 1)
+                        && notAfterOperator2(String.valueOf(mInputText),mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                     updateResultView();
                 }
@@ -566,17 +615,17 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
         } else {
             if (mCursorPosition == mInputText.length()) {
-                if (notBeforeOperator()) {
+                if (notBeforeOperator(String.valueOf(mInputText),mCursorPosition - 1)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else if (mCursorPosition == 0) {
-                if (notAfterOperator1(0)) {
+                if (notAfterOperator1(String.valueOf(mInputText),0)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                     updateResultView();
                 }
             } else {
-                if (notBeforeOperator()
-                        && notAfterOperator1(mCursorPosition)) {
+                if (notBeforeOperator(String.valueOf(mInputText),mCursorPosition - 1)
+                        && notAfterOperator1(String.valueOf(mInputText),mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                     updateResultView();
                 }
@@ -590,12 +639,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         if (notEmptyNotStart()) {
             if (mCursorPosition == mInputText.length()) {
-                if (notBeforeOperator()) {
+                if (notBeforeOperator(String.valueOf(mInputText),mCursorPosition - 1)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                 }
             } else {
-                if (notBeforeOperator()
-                        && notAfterOperator1(mCursorPosition)) {
+                if (notBeforeOperator(String.valueOf(mInputText),mCursorPosition - 1)
+                        && notAfterOperator1(String.valueOf(mInputText),mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                     updateResultView();
                 }
@@ -674,7 +723,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private int getNumberEnd(int indexSecond) {
         for (int i = mCursorPosition; i < mInputText.length(); i++) {
-            if (numberNoPoint(i)) {
+            if (numberNoPoint(String.valueOf(mInputText),i)) {
                 indexSecond = i;
                 break;
             }
@@ -684,7 +733,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private int getNumberStart(int indexFirst) {
         for (int i = mCursorPosition - 1; i >= 0; i--) {
-            if (numberNoPoint(i)) {
+            if (numberNoPoint(String.valueOf(mInputText),i)) {
                 indexFirst = i;
                 break;
             }
@@ -725,11 +774,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             } else {
                 boolean zeroOK = true;
                 boolean hasPoint;
-                if (buttonString.equals(getResources().getString(R.string.zero))) {
+                if (buttonString.equals(getString(R.string.zero))) {
                     if (mCursorPosition != 0 && mCursorPosition < mInputText.length()) {
                         zeroOK=zeroBefore();
-                        if (!numberPoint(mCursorPosition)) {
-                            if (numberPoint(mCursorPosition - 1)) {
+                        if (!numberPoint(String.valueOf(mInputText),mCursorPosition)) {
+                            if (numberPoint(String.valueOf(mInputText),mCursorPosition - 1)) {
                                 hasPoint = zeroPoint();
                                 if (hasPoint) {
                                     zeroOK = false;
@@ -739,7 +788,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                             }
                         }
                     } else if (mCursorPosition == 0) {
-                        if (!numberNoPoint(0)) {
+                        if (!numberNoPoint(String.valueOf(mInputText),0)) {
                             hasPoint = zeroPoint();
                             if (hasPoint) {
                                 zeroOK = false;
@@ -762,10 +811,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private boolean zeroPoint() {
         boolean hasPoint = false;
         for (int i = mCursorPosition; i < mInputText.length(); i++) {
-            if (numberPoint(i)){
+            if (numberPoint(String.valueOf(mInputText),i)){
                 break;
             }
-            if (numberNoPoint(i) && mInputText.charAt(i) == '.') {
+            if (numberNoPoint(String.valueOf(mInputText),i) && mInputText.charAt(i) == '.') {
                 hasPoint = true;
             }
         }
@@ -774,11 +823,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private boolean zeroBefore() {
         boolean zeroOK=true;
-        if (!numberPoint(mCursorPosition - 1)) {
+        if (!numberPoint(String.valueOf(mInputText),mCursorPosition - 1)) {
             for (int i = mCursorPosition - 1; i >= 0; i--) {
-                if (mInputText.charAt(i) != '0' && !numberPoint(i)) {
+                if (mInputText.charAt(i) != '0' && !numberPoint(String.valueOf(mInputText),i)) {
                     break;
-                } else if (mInputText.charAt(i) != '0' && numberPoint(i)) {
+                } else if (mInputText.charAt(i) != '0' && numberPoint(String.valueOf(mInputText),i)) {
                     zeroOK = false;
                     break;
                 } else if (mInputText.charAt(i) == '0' && i == 0) {
@@ -804,7 +853,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         boolean isResultOk = true;//检测结果是否正常
         String sResult = mResultView.getText().toString();
         for (int i = 0; i < sResult.length(); i++) {//若运算结果非数字 即无正常运算结果
-            if (NUMBER_POINT.indexOf(sResult.charAt(i)) == -1 && sResult.charAt(i) != '-') {
+            if (numberPoint(sResult,i) && sResult.charAt(i) != '-') {
                 isResultOk = false;
             }
         }
@@ -820,47 +869,47 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         StringBuilder number = new StringBuilder();//记录数字
         ArrayList<String> inputList = new ArrayList<>();//新建集合记录内容以便计算
         for (int i = 0; i < mInputText.length(); i++) {//向集合中依次添加内容
-            if (NUMBER_POINT.indexOf(mInputText.charAt(i)) != -1) {//若读取到的内容为数字则把其添加到number
+            if (!numberPoint(String.valueOf(mInputText),i)) {//若读取到的内容为数字则把其添加到number
                 number.append(mInputText.charAt(i));
             } else if (mInputText.charAt(i) == 'l') {//添加log
                 if (number.length() != 0) {
                     inputList.add(String.valueOf(number));
                     number.setLength(0);
                 }
-                operator.append(getResources().getString(R.string.log));
+                operator.append(getString(R.string.log));
                 inputList.add(String.valueOf(operator));
                 operator.setLength(0);
-                inputList.add(getResources().getString(R.string.bracketleft));
+                inputList.add(getString(R.string.bracketleft));
                 i = i + 3;
             } else if (mInputText.charAt(i) == 't') {//添加tan
                 if (number.length() != 0) {
                     inputList.add(String.valueOf(number));
                     number.setLength(0);
                 }
-                operator.append(getResources().getString(R.string.tan));
+                operator.append(getString(R.string.tan));
                 inputList.add(String.valueOf(operator));
                 operator.setLength(0);
-                inputList.add(getResources().getString(R.string.bracketleft));
+                inputList.add(getString(R.string.bracketleft));
                 i = i + 3;
             } else if (mInputText.charAt(i) == 'c') {//添加cos
                 if (number.length() != 0) {
                     inputList.add(String.valueOf(number));
                     number.setLength(0);
                 }
-                operator.append(getResources().getString(R.string.cos));
+                operator.append(getString(R.string.cos));
                 inputList.add(String.valueOf(operator));
                 operator.setLength(0);
-                inputList.add(getResources().getString(R.string.bracketleft));
+                inputList.add(getString(R.string.bracketleft));
                 i = i + 3;
             } else if (mInputText.charAt(i) == 's') {//添加sin
                 if (number.length() != 0) {
                     inputList.add(String.valueOf(number));
                     number.setLength(0);
                 }
-                operator.append(getResources().getString(R.string.sin));
+                operator.append(getString(R.string.sin));
                 inputList.add(String.valueOf(operator));
                 operator.setLength(0);
-                inputList.add(getResources().getString(R.string.bracketleft));
+                inputList.add(getString(R.string.bracketleft));
                 i = i + 3;
             } else {
                 if (number.length() != 0) {
@@ -912,13 +961,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private void removeZero(ArrayList<String> inputList) {
         for (int i = 0; i < inputList.size(); i++) {//处理使用删除键时产生的多余0
             if (inputList.get(i).length() > 1) {
-                if (inputList.get(i).startsWith(getResources().getString(R.string.zero))
+                if (inputList.get(i).startsWith(getString(R.string.zero))
                         && inputList.get(i).charAt(1) == '0') {
                     String s = inputList.get(i);
-                    while (s.length() > 1 && s.startsWith(getResources().getString(R.string.zero)) && s.charAt(1) == '0') {
+                    while (s.length() > 1 && s.startsWith(getString(R.string.zero)) && s.charAt(1) == '0') {
                         s = s.substring(1);
                     }
-                    if (s.startsWith(getResources().getString(R.string.point))) {
+                    if (s.startsWith(getString(R.string.point))) {
                         s = "0" + s;
                     }
                     inputList.set(i, s);
@@ -929,7 +978,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private void piToValue(ArrayList<String> inputList) {
         for (int i = 0; i < inputList.size(); i++) {//把圆周率转化为可计算数值
-            if (inputList.get(i).equals(getResources().getString(R.string.pi))) {
+            if (inputList.get(i).equals(getString(R.string.pi))) {
                 inputList.set(i, String.valueOf(Math.PI));
             }
         }
@@ -945,32 +994,32 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private void insertMultiply(ArrayList<String> list) {//插入必要乘号
         for (int i = 0; i < list.size() - 1; i++) {
-            if (list.get(i).equals(getResources().getString(R.string.pi))
-                    || list.get(i).equals(getResources().getString(R.string.bracketright))
-                    || list.get(i).equals(getResources().getString(R.string.percent))
-                    || list.get(i).equals(getResources().getString(R.string.factorial))) {
-                if (list.get(i + 1).equals(getResources().getString(R.string.pi))
-                        || list.get(i + 1).equals(getResources().getString(R.string.root))
+            if (list.get(i).equals(getString(R.string.pi))
+                    || list.get(i).equals(getString(R.string.bracketright))
+                    || list.get(i).equals(getString(R.string.percent))
+                    || list.get(i).equals(getString(R.string.factorial))) {
+                if (list.get(i + 1).equals(getString(R.string.pi))
+                        || list.get(i + 1).equals(getString(R.string.root))
                         || list.get(i + 1).startsWith("c") || list.get(i + 1).startsWith("s")
                         || list.get(i + 1).startsWith("t") || list.get(i + 1).startsWith("l")
-                        || list.get(i + 1).equals(getResources().getString(R.string.bracketleft))
-                        || NUMBER_POINT.indexOf(list.get(i + 1).charAt(0)) != -1) {
-                    list.add(i + 1, getResources().getString(R.string.multiply));
+                        || list.get(i + 1).equals(getString(R.string.bracketleft))
+                        || !numberPoint(list.get(i + 1),0)) {
+                    list.add(i + 1, getString(R.string.multiply));
                 }
             }
         }
         for (int i = 1; i < list.size(); i++) {
-            if (list.get(i).equals(getResources().getString(R.string.pi))
-                    || list.get(i).equals(getResources().getString(R.string.root))
+            if (list.get(i).equals(getString(R.string.pi))
+                    || list.get(i).equals(getString(R.string.root))
                     || list.get(i).startsWith("c") || list.get(i).startsWith("s")
                     || list.get(i).startsWith("t") || list.get(i).startsWith("l")
-                    || list.get(i).equals(getResources().getString(R.string.bracketleft))) {
-                if (list.get(i - 1).equals(getResources().getString(R.string.pi))
-                        || list.get(i - 1).equals(getResources().getString(R.string.bracketright))
-                        || list.get(i - 1).equals(getResources().getString(R.string.percent))
-                        || list.get(i - 1).equals(getResources().getString(R.string.factorial))
-                        || NUMBER_POINT.indexOf(list.get(i - 1).charAt(0)) != -1) {
-                    list.add(i, getResources().getString(R.string.multiply));
+                    || list.get(i).equals(getString(R.string.bracketleft))) {
+                if (list.get(i - 1).equals(getString(R.string.pi))
+                        || list.get(i - 1).equals(getString(R.string.bracketright))
+                        || list.get(i - 1).equals(getString(R.string.percent))
+                        || list.get(i - 1).equals(getString(R.string.factorial))
+                        || !numberPoint(list.get(i - 1),0)) {
+                    list.add(i, getString(R.string.multiply));
                 }
             }
         }
@@ -979,14 +1028,15 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private void canCalculated(ArrayList<String> inputList) {//检测是否可以运算
         canCalculate = mBracketStatus == 0;//检测括号是否完整
         if (inputList.size() > 0) {
-            if (NOT_AFTER_OPERATOR_2.contains(inputList.get(0))) {//这些不能开头
-                canCalculate = false;
+            if (!notAfterOperator2(inputList.get(0),0)) {
+                canCalculate = false;//这些不能开头
             }
-            if (NOT_BEFORE_OPERATOR.contains(inputList.get(inputList.size() - 1))) {//这些不能结尾
-                canCalculate = false;
+            if (!notBeforeOperator(inputList.get(inputList.size() - 1),
+                    inputList.get(inputList.size() - 1).length()-1)) {
+                canCalculate = false;//这些不能结尾
             }
-            if (inputList.contains(TOO_LARGE) || inputList.contains("-" + TOO_LARGE)) {//出现超出运算范围
-                canCalculate = false;
+            if (inputList.contains(TOO_LARGE) || inputList.contains("-" + TOO_LARGE)) {
+                canCalculate = false;//出现超出运算范围
             }
 
             for (int i = 0; i < inputList.size(); i++) {
@@ -1004,40 +1054,41 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 }
 
             }
-            for (int i = 0; i < inputList.size() - 1; i++) {//不可相邻的符号
-                if (NOT_BEFORE_OPERATOR.contains(inputList.get(i)) && NOT_AFTER_OPERATOR_1.contains(inputList.get(i + 1))) {
-                    canCalculate = false;
+            for (int i = 0; i < inputList.size() - 1; i++) {
+                if (!notBeforeOperator(inputList.get(i),inputList.get(i).length()-1)
+                        && !notAfterOperator1(inputList.get(i + 1),inputList.get(i + 1).length()-1)) {
+                    canCalculate = false;//不可相邻的符号
                 }
-                if (NOT_BEFORE_ANY.indexOf(inputList.get(i).charAt(inputList.get(i).length() - 1)) != -1
-                        && NOT_BEFORE_OPERATOR.indexOf(inputList.get(i).charAt(inputList.get(i).length() - 1)) != -1
-                        && inputList.get(i + 1).equals(getResources().getString(R.string.bracketright))) {
-                    canCalculate = false;
+                if (!notBeforeAny(inputList.get(i),inputList.get(i).length() - 1)
+                        && !notBeforeOperator(inputList.get(i),inputList.get(i).length() - 1)
+                        && inputList.get(i + 1).equals(getString(R.string.bracketright))) {
+                    canCalculate = false;//不可相邻的符号
                 }
-                if (inputList.get(i).equals(getResources().getString(R.string.root))//根号不能跟负数
-                        && inputList.get(i + 1).equals(getResources().getString(R.string.minus))) {
-                    canCalculate = false;
+                if (inputList.get(i).equals(getString(R.string.root))
+                        && inputList.get(i + 1).equals(getString(R.string.minus))) {
+                    canCalculate = false;//根号不能跟负数
                 }
-                if (inputList.get(i).equals(getResources().getString(R.string.divide))//不可以除以0
-                        && inputList.get(i + 1).equals(getResources().getString(R.string.zero))) {
-                    canCalculate = false;
+                if (inputList.get(i).equals(getString(R.string.divide))
+                        && inputList.get(i + 1).equals(getString(R.string.zero))) {
+                    canCalculate = false;//不可以除以0
                 }
 
             }
-            for (int i = 0; i < inputList.size() - 2; i++) {//log运算检测
-                if (inputList.get(i).equals(getResources().getString(R.string.log))
-                        && inputList.get(i + 1).equals(getResources().getString(R.string.bracketleft))
-                        && NOT_AFTER_OPERATOR_1.contains(inputList.get(i + 2))) {
-                    canCalculate = false;
+            for (int i = 0; i < inputList.size() - 2; i++) {
+                if (inputList.get(i).equals(getString(R.string.log))
+                        && inputList.get(i + 1).equals(getString(R.string.bracketleft))
+                        && !notAfterOperator1(inputList.get(i + 2),0)) {
+                    canCalculate = false;//log运算检测
                 }
             }
             for (int i = inputList.size() - 1; i > 0; i--) {
-                if (inputList.get(i).equals(getResources().getString(R.string.factorial))//小数不能阶乘
-                        && inputList.get(i - 1).contains(getResources().getString(R.string.point))) {
-                    canCalculate = false;
+                if (inputList.get(i).equals(getString(R.string.factorial))
+                        && inputList.get(i - 1).contains(getString(R.string.point))) {
+                    canCalculate = false;//小数不能阶乘
                 }
-                if (inputList.get(i).equals(getResources().getString(R.string.factorial))//负数不能阶乘
-                        && inputList.get(i - 1).startsWith(getResources().getString(R.string.minus))) {
-                    canCalculate = false;
+                if (inputList.get(i).equals(getString(R.string.factorial))
+                        && inputList.get(i - 1).startsWith(getString(R.string.minus))) {
+                    canCalculate = false;//负数不能阶乘
                 }
             }
         }
@@ -1045,10 +1096,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void plusMethod(ArrayList<String> inputList) {//加法运算
-        while (inputList.contains(getResources().getString(R.string.plus))) {
+        while (inputList.contains(getString(R.string.plus))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.indexOf(getResources().getString(R.string.plus));
+            int index = inputList.indexOf(getString(R.string.plus));
             String s1 = inputList.get(index - 1);
             String s2 = inputList.get(index + 1);
             String result = MyMath.myPlus(s1, s2);
@@ -1060,10 +1111,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void minusMethod(ArrayList<String> inputList) {//减法运算
-        while (inputList.contains(getResources().getString(R.string.minus))) {
+        while (inputList.contains(getString(R.string.minus))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.indexOf(getResources().getString(R.string.minus));
+            int index = inputList.indexOf(getString(R.string.minus));
             String s1 = inputList.get(index - 1);
             String s2 = inputList.get(index + 1);
             String result = MyMath.myMinus(s1, s2);
@@ -1075,10 +1126,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void multiplyMethod(ArrayList<String> inputList) {//乘法运算
-        while (inputList.contains(getResources().getString(R.string.multiply))) {
+        while (inputList.contains(getString(R.string.multiply))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.indexOf(getResources().getString(R.string.multiply));
+            int index = inputList.indexOf(getString(R.string.multiply));
             String s1 = inputList.get(index - 1);
             String s2 = inputList.get(index + 1);
             String result = MyMath.myMultiply(s1, s2);
@@ -1090,10 +1141,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void divideMethod(ArrayList<String> inputList) {//除法运算
-        while (inputList.contains(getResources().getString(R.string.divide))) {
+        while (inputList.contains(getString(R.string.divide))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.indexOf(getResources().getString(R.string.divide));
+            int index = inputList.indexOf(getString(R.string.divide));
             String s1 = inputList.get(index - 1);
             String s2 = inputList.get(index + 1);
             String result = MyMath.myDivide(s1, s2);
@@ -1105,10 +1156,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void powMethod(ArrayList<String> inputList) {//次方运算
-        while (inputList.contains(getResources().getString(R.string.pow))) {
+        while (inputList.contains(getString(R.string.pow))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.indexOf(getResources().getString(R.string.pow));
+            int index = inputList.indexOf(getString(R.string.pow));
             String s1 = inputList.get(index - 1);
             String s2 = inputList.get(index + 1);
             String result = MyMath.myPow(s1, s2);
@@ -1124,11 +1175,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
      * 例如，当找到一个最左边的百分号，要看其左边有没有阶乘号，若有则先算。
      */
     private void factorialMethod(ArrayList<String> inputList) {//阶乘运算
-        while (inputList.contains(getResources().getString(R.string.factorial))) {
+        while (inputList.contains(getString(R.string.factorial))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.indexOf(getResources().getString(R.string.factorial));
-            if (inputList.get(index - 1).equals(getResources().getString(R.string.percent))) {
+            int index = inputList.indexOf(getString(R.string.factorial));
+            if (inputList.get(index - 1).equals(getString(R.string.percent))) {
                 percentMethod(inputList);
             } else {
                 String s = inputList.get(index - 1);
@@ -1142,7 +1193,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private String removePoint(String result) {//去除不必要小数点
         int count = 0;
-        if (result.contains(getResources().getString(R.string.point))) {
+        if (result.contains(getString(R.string.point))) {
             for (int i = result.length() - 1; i >= 0; i--) {
                 if (result.charAt(i) == '0') {
                     count++;
@@ -1159,11 +1210,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void percentMethod(ArrayList<String> inputList) {//百分比运算
-        while (inputList.contains(getResources().getString(R.string.percent))) {
+        while (inputList.contains(getString(R.string.percent))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.indexOf(getResources().getString(R.string.percent));
-            if (inputList.get(index - 1).equals(getResources().getString(R.string.factorial))) {
+            int index = inputList.indexOf(getString(R.string.percent));
+            if (inputList.get(index - 1).equals(getString(R.string.factorial))) {
                 factorialMethod(inputList);
             } else {
                 String s = inputList.get(index - 1);
@@ -1180,17 +1231,17 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
      * 例如，当找到一个最右边的log，要看其右边有没有root或三角函数，若有则应先运算之。
      */
     private void sinMethod(ArrayList<String> inputList) {//正弦运算
-        while (inputList.contains(getResources().getString(R.string.sin))) {
+        while (inputList.contains(getString(R.string.sin))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.lastIndexOf(getResources().getString(R.string.sin));
-            if (inputList.get(index + 1).equals(getResources().getString(R.string.log))) {
+            int index = inputList.lastIndexOf(getString(R.string.sin));
+            if (inputList.get(index + 1).equals(getString(R.string.log))) {
                 logMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.tan))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.tan))) {
                 tanMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.cos))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.cos))) {
                 cosMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.root))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.root))) {
                 rootMethod(inputList);
             } else {
                 String s = inputList.get(index + 1);
@@ -1203,17 +1254,17 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void cosMethod(ArrayList<String> inputList) {//余弦运算
-        while (inputList.contains(getResources().getString(R.string.cos))) {
+        while (inputList.contains(getString(R.string.cos))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.lastIndexOf(getResources().getString(R.string.cos));
-            if (inputList.get(index + 1).equals(getResources().getString(R.string.log))) {
+            int index = inputList.lastIndexOf(getString(R.string.cos));
+            if (inputList.get(index + 1).equals(getString(R.string.log))) {
                 logMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.tan))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.tan))) {
                 tanMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.root))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.root))) {
                 rootMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.sin))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.sin))) {
                 sinMethod(inputList);
             } else {
                 String s = inputList.get(index + 1);
@@ -1226,17 +1277,17 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void tanMethod(ArrayList<String> inputList) {//正切运算
-        while (inputList.contains(getResources().getString(R.string.tan))) {
+        while (inputList.contains(getString(R.string.tan))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.lastIndexOf(getResources().getString(R.string.tan));
-            if (inputList.get(index + 1).equals(getResources().getString(R.string.log))) {
+            int index = inputList.lastIndexOf(getString(R.string.tan));
+            if (inputList.get(index + 1).equals(getString(R.string.log))) {
                 logMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.root))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.root))) {
                 rootMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.cos))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.cos))) {
                 cosMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.sin))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.sin))) {
                 sinMethod(inputList);
             } else {
                 String s = inputList.get(index + 1);
@@ -1249,21 +1300,21 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void logMethod(ArrayList<String> inputList) {//log运算
-        while (inputList.contains(getResources().getString(R.string.log))) {
+        while (inputList.contains(getString(R.string.log))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.lastIndexOf(getResources().getString(R.string.log));
-            if (inputList.get(index + 1).equals(getResources().getString(R.string.root))) {
+            int index = inputList.lastIndexOf(getString(R.string.log));
+            if (inputList.get(index + 1).equals(getString(R.string.root))) {
                 rootMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.tan))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.tan))) {
                 tanMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.cos))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.cos))) {
                 cosMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.sin))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.sin))) {
                 sinMethod(inputList);
             } else {
                 String s = inputList.get(index + 1);
-                if (s.startsWith(getResources().getString(R.string.minus))) {
+                if (s.startsWith(getString(R.string.minus))) {
                     canCalculate = false;
                     break;
                 }
@@ -1276,17 +1327,17 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void rootMethod(ArrayList<String> inputList) {//根号运算
-        while (inputList.contains(getResources().getString(R.string.root))) {
+        while (inputList.contains(getString(R.string.root))) {
             canCalculated(inputList);
             if (!canCalculate) break;
-            int index = inputList.lastIndexOf(getResources().getString(R.string.root));
-            if (inputList.get(index + 1).equals(getResources().getString(R.string.log))) {
+            int index = inputList.lastIndexOf(getString(R.string.root));
+            if (inputList.get(index + 1).equals(getString(R.string.log))) {
                 logMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.tan))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.tan))) {
                 tanMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.cos))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.cos))) {
                 cosMethod(inputList);
-            } else if (inputList.get(index + 1).equals(getResources().getString(R.string.sin))) {
+            } else if (inputList.get(index + 1).equals(getString(R.string.sin))) {
                 sinMethod(inputList);
             } else {
                 String s = inputList.get(index + 1);
@@ -1300,9 +1351,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private void bracketMethod(ArrayList<String> inputList) {//括号运算
         ArrayList<String> tempList = new ArrayList<>();//新建一个临时集合来记录括号内的内容
-        while (inputList.contains(getResources().getString(R.string.bracketright))) {
-            int indexEnd = inputList.indexOf(getResources().getString(R.string.bracketright));//第一个右括号位置
-            int indexStart = inputList.subList(0, indexEnd).lastIndexOf(getResources().getString(R.string.bracketleft));
+        while (inputList.contains(getString(R.string.bracketright))) {
+            int indexEnd = inputList.indexOf(getString(R.string.bracketright));//第一个右括号位置
+            int indexStart = inputList.subList(0, indexEnd).lastIndexOf(getString(R.string.bracketleft));
             //与之对应的左括号位置
             for (int i = indexStart + 1; i < indexEnd; i++) {
                 tempList.add(inputList.get(i));//把括号内的内容添加到临时集合里
@@ -1335,12 +1386,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private void checkMinus(ArrayList<String> list) {//检测负号
         if (list.size() > 1) {
 
-            if (list.get(0).equals(getResources().getString(R.string.minus))) {//第一位是负号
-                if (NUMBER_NO_POINT.indexOf(list.get(1).charAt(0)) != -1) {//第二位是数字
+            if (list.get(0).equals(getString(R.string.minus))) {//第一位是负号
+                if (!numberNoPoint(list.get(1),0)) {//第二位是数字
                     String s = list.get(0) + list.get(1);//把二者合一
                     list.remove(1);
                     list.set(0, s);
-                } else if (list.get(1).equals(getResources().getString(R.string.pi))) {//第二位是圆周率
+                } else if (list.get(1).equals(getString(R.string.pi))) {//第二位是圆周率
                     String s = list.get(0) + list.get(1);//把二者合一
                     list.remove(1);
                     list.set(0, s);
@@ -1356,7 +1407,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             checkDelete(mCursorPosition == mInputText.length());
         }
         if (mInputView.getText().toString().length() > 0) {
-            if (NUMBER_NO_POINT.indexOf(mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1)) != -1
+            if (!numberNoPoint(mInputView.getText().toString(),mInputView.getText().toString().length() - 1)
                     || mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1) == ')'
                     || mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1) == '!'
                     || mInputView.getText().toString().charAt(mInputView.getText().toString().length() - 1) == '%') {
@@ -1436,13 +1487,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     private void setButtonBackground() {//根据点击时间长短设置不同点击背景效果
         if (mPressDuration <= 100) {
-            setBackgroundDrawable(0);
+            setBackgroundDrawable(0);//当点击时间小于100 设置短背景
         } else {
-            setBackgroundDrawable(1);
+            setBackgroundDrawable(1);//当点击时间大于100 设置长背景
         }
     }
 
-    private void setBackgroundDrawable(int i) {
+    private void setBackgroundDrawable(int i) {//设置按键背景资源
         if (i == 0) {
             mClearButton.setBackgroundResource(R.drawable.background_clear_rp_short);
             mDeleteButton.setBackgroundResource(R.drawable.background_number_rp_short);
