@@ -40,7 +40,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private final String NUMBER_POINT = ".0123456789";//所有数字包含小数点
     public static final String TOO_LARGE = "Infinity";//过大提醒
     private boolean canCalculate;//检测是否可以运算
-    private StringBuilder mSavedText;
+    private StringBuilder mSavedText;//点击等号后记录之前输入的内容
     private final String NOT_BEFORE_ANY = "anotcsilg"; //不能相邻前者
 
 
@@ -310,8 +310,8 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private boolean notBeforeAny() {
         return NOT_BEFORE_ANY.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1;
     }
-    private boolean notAfterOperator2() {
-        return NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(mCursorPosition)) == -1;
+    private boolean notAfterOperator2(int num) {
+        return NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(num)) == -1;
     }
     private boolean notBeforeOperator() {
         return NOT_BEFORE_OPERATOR.indexOf(mInputText.charAt(mCursorPosition - 1)) == -1;
@@ -382,7 +382,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private boolean bracketLeftCheck() {//左括号检测
         return bracketLeftCheckBefore()
                 && notAfterAny()
-                && notAfterOperator2();
+                && notAfterOperator2(mCursorPosition);
     }
     private boolean bracketRightCheckBefore() {//右括号检测前
         return notBeforeAny() && notBeforeOperator();
@@ -470,14 +470,14 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                     mBracketStatus++;
                 }
             } else if (mCursorPosition == 0) {
-                if (NOT_AFTER_OPERATOR_2.indexOf(mInputText.charAt(0)) == -1) {
+                if (notAfterOperator2(0)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
                             buttonString + getResources().getString(R.string.bracketleft));
                     mBracketStatus++;
                 }
             } else {
                 if (notPoint(mCursorPosition-1)
-                        && notAfterOperator2()) {
+                        && notAfterOperator2(mCursorPosition)) {
                     updateInputView(mCursorPosition + 4, mCursorPosition,
                             buttonString + getResources().getString(R.string.bracketleft));
                     mBracketStatus++;
@@ -510,7 +510,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 }
             } else {
                 if (notBeforeOperator()
-                        && notAfterOperator2()) {
+                        && notAfterOperator2(mCursorPosition)) {
                     updateInputView(mCursorPosition + 1, mCursorPosition, buttonString);
                     updateResultView();
                 }
@@ -792,8 +792,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             String WARNING = "Math Error !!!";
             mResultView.setText(WARNING);
         }
-
-
     }
 
     private void removeZero(ArrayList<String> inputList) {
