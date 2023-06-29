@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,7 +49,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private boolean canCalculate;//检测是否可以运算
     private StringBuilder mSavedText;//点击等号后记录之前输入的内容
     private SharedPreferences sharedPreferences;
-    private EditText mHistoryView;
+    private Button mHistoryButton;
 
     @SuppressLint({"ClickableViewAccessibility", "MissingInflatedId"})
     @Override
@@ -62,6 +63,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         mEqualsButton = findViewById(R.id.button_equals);
         mDeleteButton = findViewById(R.id.button_delete);
         mOperatorRow2 = findViewById(R.id.operator_row_2);
+        mHistoryButton = findViewById(R.id.button_history);
         sharedPreferences = getSharedPreferences("history", Context.MODE_PRIVATE);
         mSmallButton = new Button[]{
                 findViewById(R.id.button_root),
@@ -94,12 +96,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 findViewById(R.id.button_eight),
                 findViewById(R.id.button_nine)
         };
+        mHistoryButton.setOnTouchListener(this);
+        mHistoryButton.setOnClickListener(this);
         moreButtonMethod();
         overStatusBar();
         setSingleLines();
         hideInput();
         setMyTestSize();
-        showHistory();
         mClearButton.setOnClickListener(this);
         mClearButton.setOnTouchListener(this);
         mEqualsButton.setOnClickListener(this);
@@ -124,45 +127,55 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showHistory() {//显示历史记录
-        mClearButton.setOnLongClickListener(v -> {
-            String title = "History";
-            AlertDialog.Builder builder = new AlertDialog.Builder(CalculatorActivity.this, R.style.MyDialogTheme );
-            builder.setTitle(title);
-            Map<String, ?> allHistory = sharedPreferences.getAll();
-            Iterator<? extends Entry<String, ?>> iterator = allHistory.entrySet().iterator();
-            ArrayList<String> historyList = new ArrayList<>();
-            ArrayList<Long> keyList = new ArrayList<>();
-            while (iterator.hasNext()){
-                Entry<String, ?> entry = iterator.next();
-                String key = entry.getKey();
-                keyList.add(Long.valueOf(key));
-                Collections.sort(keyList);
-            }
-            for (int i = 0; i < keyList.size(); i++) {
-                String value = String.valueOf(allHistory.get(String.valueOf(keyList.get(i))));
-                historyList.add(value);
-            }
-            StringBuilder showHistory = new StringBuilder();
-            for (int i = 0; i < historyList.size(); i++) {
-                showHistory.append(historyList.get(i)).append("\n"+"\n");
-            }
-            mHistoryView = new EditText(CalculatorActivity.this);
-            mHistoryView.setPadding(40,40,40,40);
-            mHistoryView.setTextSize(24);
-            mHistoryView.setText(showHistory);
-            mHistoryView.setBackground(null);
+        String title = "History";
+        AlertDialog.Builder builder = new AlertDialog.Builder(CalculatorActivity.this, R.style.MyDialogTheme);
+        builder.setTitle(title);
+        Map<String, ?> allHistory = sharedPreferences.getAll();
+        Iterator<? extends Entry<String, ?>> iterator = allHistory.entrySet().iterator();
+        ArrayList<String> historyList = new ArrayList<>();
+        ArrayList<Long> keyList = new ArrayList<>();
+        while (iterator.hasNext()) {
+            Entry<String, ?> entry = iterator.next();
+            String key = entry.getKey();
+            keyList.add(Long.valueOf(key));
+            Collections.sort(keyList);
+        }
+        for (int i = 0; i < keyList.size(); i++) {
+            String value = String.valueOf(allHistory.get(String.valueOf(keyList.get(i))));
+            historyList.add(value);
+        }
+        StringBuilder showHistory = new StringBuilder();
+        for (int i = 0; i < historyList.size(); i++) {
+            showHistory.append(historyList.get(i)).append("\n" + "\n");
+        }
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        EditText mHistoryView = new EditText(CalculatorActivity.this);
+        mHistoryView.setPadding(40, 40, 40, 40);
+        mHistoryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
+        mHistoryView.setText(showHistory);
+        mHistoryView.setBackground(null);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        try {
+            Class<EditText> cls = EditText.class;
+            Method method = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+            method.setAccessible(true);
+            method.invoke(mHistoryView, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //            mHistoryView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-            builder.setView(mHistoryView);
-            builder.setNegativeButton("Clear", (dialog, which) -> {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
-                editor.apply();
-                dialog.dismiss();
-            });
-            builder.setCancelable(true);
-            builder.show();
-            return false;
+        builder.setView(mHistoryView);
+        builder.setNegativeButton("Clear", (dialog, which) -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
+            dialog.dismiss();
         });
+        builder.setCancelable(true);
+        builder.show();
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -185,9 +198,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onClick(View v) {//重新设置guideline位置以显示或隐藏更多的按键
                     if (!mShowFlag) {
-                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.41f, 0.47f);
+                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.39f, 0.45f);
                         valueAnimator.setDuration(200);
-                        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        for (int i = 0; i < 50; i++) {
+                            valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        }
                         valueAnimator.addUpdateListener(animation -> {
                             lp.guidePercent = (float) valueAnimator.getAnimatedValue();
                             mGuideline1.setLayoutParams(lp);
@@ -197,7 +212,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                         mOperatorRow2.setVisibility(View.VISIBLE);
                         mShowFlag = true;
                     } else {
-                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.47f, 0.41f);
+                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.45f, 0.39f);
                         valueAnimator.setDuration(200);
                         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
                         valueAnimator.addUpdateListener(animation -> {
@@ -219,8 +234,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
-        mInputView.setTextSize((float) (height / 30));
-        mResultView.setTextSize((float) (height / 55));
+        int widthScreen = displayMetrics.widthPixels;
+        int inputLength = widthScreen / (height / 15);
+        mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 8));
+        mResultView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 20));
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mInputView.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -235,59 +252,52 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
                 @Override
                 public void afterTextChanged(Editable s) {//根据输入框内容长度自动调节字体大小
-                    if (s.length() < 10) {
-                        mInputView.setTextSize((float) (height / 30));
-                    } else if (s.length() >= 10 && s.length() < 11) {
-                        mInputView.setTextSize((float) (height / 34));
-                    } else if (s.length() >= 11 && s.length() < 12) {
-                        mInputView.setTextSize((float) (height / 37));
-                    } else if (s.length() >= 12 && s.length() < 13) {
-                        mInputView.setTextSize((float) (height / 40));
-                    } else if (s.length() >= 13 && s.length() < 14) {
-                        mInputView.setTextSize((float) (height / 43));
-                    } else if (s.length() >= 14 && s.length() < 15) {
-                        mInputView.setTextSize((float) (height / 46));
-                    } else if (s.length() >= 15 && s.length() < 16) {
-                        mInputView.setTextSize((float) (height / 49));
-                    } else if (s.length() >= 16 && s.length() < 17) {
-                        mInputView.setTextSize((float) (height / 52));
-                    } else if (s.length() >= 17 && s.length() < 18) {
-                        mInputView.setTextSize((float) (height / 55));
-                    } else if (s.length() >= 18 && s.length() < 19) {
-                        mInputView.setTextSize((float) (height / 58));
-                    } else if (s.length() >= 19) {
-                        mInputView.setTextSize((float) (height / 60));
+                    if (s.length() <= inputLength) {
+                        mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 8));
+                    } else if (s.length() > inputLength && s.length() <= inputLength + 2) {
+                        mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 10));
+                    } else if (s.length() > inputLength + 2 && s.length() <= inputLength + 4) {
+                        mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 12));
+                    } else if (s.length() > inputLength + 4 && s.length() <= inputLength + 6) {
+                        mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 14));
+                    } else if (s.length() > inputLength + 6 && s.length() <= inputLength + 8) {
+                        mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 16));
+                    } else if (s.length() > inputLength + 8 && s.length() <= inputLength + 10) {
+                        mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 18));
+                    } else {
+                        mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 20));
                     }
-
                 }
             });
-            mMoreButton.setTextSize((float) (height / 180));
-            mClearButton.setTextSize((float) (height / 70));
-            mEqualsButton.setTextSize((float) (height / 70));
-            mDeleteButton.setTextSize((float) (height / 70));
+            mHistoryButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 50));
+            mMoreButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 80));
+            mClearButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
+            mEqualsButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
+            mDeleteButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
             for (Button button : mOperatorButton) {
-                button.setTextSize((float) (height / 70));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
             }
             for (Button button : mNumberButton) {
-                button.setTextSize((float) (height / 70));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
             }
             for (Button button : mSmallButton) {
-                button.setTextSize((float) (height / 100));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
             }
         }
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             for (Button button : mOperatorButton) {
-                button.setTextSize((float) (height / 50));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
             }
             for (Button button : mNumberButton) {
-                button.setTextSize((float) (height / 50));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
             }
             for (Button button : mSmallButton) {
-                button.setTextSize((float) (height / 80));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 20));
             }
-            mClearButton.setTextSize((float) (height / 50));
-            mEqualsButton.setTextSize((float) (height / 50));
-            mDeleteButton.setTextSize((float) (height / 50));
+            mHistoryButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 40));
+            mClearButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
+            mEqualsButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
+            mDeleteButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
         }
     }
 
@@ -341,6 +351,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         //输入左括号时，mBracketStatus自增，输入右括号时，其自减，以此判断括号是否完整。
         if (inputOk) {//确保相邻内容不违规时
             switch (buttonString) {
+                case "History":
+                    showHistory();
+                    break;
                 case "AC":
                     clearMethod();
                     break;
@@ -926,10 +939,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             mInputView.setSelection(mInputView.getText().toString().length());
         }
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Date date= new Date();
+        Date date = new Date();
         String sTime = String.valueOf(date.getTime());
-        String sInputText = mInputText.toString()+"="+mResultView.getText().toString();
-        editor.putString(sTime,sInputText);
+        String sInputText = mInputText.toString() + "=" + mResultView.getText().toString();
+        editor.putString(sTime, sInputText);
         editor.apply();
         sharedPreferences.edit().apply();
     }
