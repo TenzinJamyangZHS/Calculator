@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace 'com.ttt.calculator'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.ttt.calculator"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -20,6 +20,14 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        applicationVariants.all {
+            variant ->
+                variant.outputs.each {
+                    output ->
+                        def name = "Calendar-release.apk"
+                        output.outputFileName = name
+                }
         }
     }
     compileOptions {

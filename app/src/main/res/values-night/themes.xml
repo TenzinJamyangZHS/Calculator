@@ -30,7 +30,7 @@
         <item name="colorAccent">@color/textcolor_calculator_night</item>
     </style>
     <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:background">?attr/background_edit</item>
+        <item name="android:windowBackground">@drawable/background_history</item>
         <item name="android:textColor">?attr/textcolor_calculator</item>
         <item name="android:colorAccent">?attr/textcolor_calculator</item>
         <item name="android:textColorPrimary">?attr/textcolor_calculator</item>

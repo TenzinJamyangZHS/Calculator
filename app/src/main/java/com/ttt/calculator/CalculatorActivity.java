@@ -1,14 +1,9 @@
 package com.ttt.calculator;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.Guideline;
-
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -17,7 +12,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,14 +19,13 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableRow;
-import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Guideline;
 
 import java.lang.reflect.Method;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -55,10 +48,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private boolean canCalculate;//检测是否可以运算
     private StringBuilder mSavedText;//点击等号后记录之前输入的内容
     private SharedPreferences sharedPreferences;
+    private EditText mHistoryView;
 
-
-
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +63,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         mDeleteButton = findViewById(R.id.button_delete);
         mOperatorRow2 = findViewById(R.id.operator_row_2);
         sharedPreferences = getSharedPreferences("history", Context.MODE_PRIVATE);
-
         mSmallButton = new Button[]{
                 findViewById(R.id.button_root),
                 findViewById(R.id.button_pi),
@@ -129,6 +120,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             button.setOnTouchListener(this);
             button.setOnClickListener(this);
         }
+
     }
 
     private void showHistory() {//显示历史记录
@@ -154,7 +146,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             for (int i = 0; i < historyList.size(); i++) {
                 showHistory.append(historyList.get(i)).append("\n"+"\n");
             }
-            builder.setMessage(showHistory);
+            mHistoryView = new EditText(CalculatorActivity.this);
+            mHistoryView.setPadding(40,40,40,40);
+            mHistoryView.setTextSize(24);
+            mHistoryView.setText(showHistory);
+            mHistoryView.setBackground(null);
+//            mHistoryView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+            builder.setView(mHistoryView);
             builder.setNegativeButton("Clear", (dialog, which) -> {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.clear();
@@ -301,7 +299,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             method.setAccessible(true);
             method.invoke(mInputView, false);
             method.invoke(mResultView, false);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
