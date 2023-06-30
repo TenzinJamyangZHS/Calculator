@@ -28,8 +28,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.4" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_3_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_3_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -47,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.47" />
+        app:layout_constraintGuide_percent="0.54" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_5"
@@ -61,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.82" />
+        app:layout_constraintGuide_percent="0.80" />
 
     <HorizontalScrollView
         android:id="@+id/input_scroll"
@@ -80,14 +88,14 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:gravity="bottom"
-            android:typeface="monospace"
             android:background="@null"
+            android:gravity="bottom"
             android:importantForAutofill="no"
             android:inputType="textNoSuggestions"
             android:paddingHorizontal="16dp"
             android:textColor="?attr/textcolor_calculator"
             android:textCursorDrawable="@drawable/bg_cursor"
+            android:typeface="monospace"
             tools:ignore="LabelFor,SpeakableTextPresentCheck" />
     </HorizontalScrollView>
 
@@ -111,9 +119,9 @@
             android:background="@null"
             android:importantForAutofill="no"
             android:inputType="textNoSuggestions"
-            android:typeface="monospace"
             android:paddingHorizontal="16dp"
             android:textColor="?attr/textcolor_calculator"
+            android:typeface="monospace"
             tools:ignore="LabelFor,SpeakableTextPresentCheck" />
     </HorizontalScrollView>
 
@@ -121,11 +129,11 @@
         android:id="@+id/operator_tablelayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginVertical="@dimen/margin_big"
         app:layout_constraintBottom_toTopOf="@id/guideline_3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline_2"
-        android:layout_marginVertical="@dimen/margin_big">
+        app:layout_constraintTop_toBottomOf="@id/guideline_2">
 
         <TableRow
             android:id="@+id/operator_row_1"
@@ -182,9 +190,10 @@
                 android:text="@string/factorial"
                 android:textAllCaps="false"
                 android:textColor="?attr/textcolor_calculator" />
+
             <Button
-                style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/button_more"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/margin_small"
@@ -192,18 +201,19 @@
                 android:background="@drawable/background_small_pressed"
                 android:text="@string/more_down"
                 android:textAllCaps="false"
-                android:textColor="?attr/textcolor_calculator"/>
+                android:textColor="?attr/textcolor_calculator" />
         </TableRow>
     </TableLayout>
+
     <TableLayout
         android:id="@+id/operator_tablelayout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/guideline_3_1"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginVertical="@dimen/margin_big"
+        app:layout_constraintBottom_toTopOf="@id/operator_tablelayout3"
+        app:layout_constraintEnd_toStartOf="@id/guideline_6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline_3"
-        android:layout_marginVertical="@dimen/margin_big">
+        app:layout_constraintTop_toBottomOf="@id/guideline_3">
 
         <TableRow
             android:id="@+id/operator_row_2"
@@ -260,6 +270,49 @@
                 android:text="@string/sin"
                 android:textAllCaps="false"
                 android:textColor="?attr/textcolor_calculator" />
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/operator_tablelayout3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="@dimen/margin_big"
+        app:layout_constraintBottom_toTopOf="@id/guideline_3_2"
+        app:layout_constraintEnd_toStartOf="@id/guideline_6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/operator_tablelayout2">
+
+        <TableRow
+            android:id="@+id/operator_row_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/button_copy"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:layout_weight="1"
+                android:background="@drawable/background_small_pressed"
+                android:text="@string/copy"
+                android:textAllCaps="false"
+                android:textColor="?attr/textcolor_calculator" />
+
+            <Button
+                android:id="@+id/button_theme"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:layout_weight="1"
+                android:background="@drawable/background_small_pressed"
+                android:textAllCaps="false"
+                android:textColor="?attr/textcolor_calculator" />
 
             <Button
                 android:id="@+id/button_history"
@@ -272,6 +325,19 @@
                 android:text="@string/history"
                 android:textAllCaps="false"
                 android:textColor="?attr/textcolor_calculator" />
+
+            <Button
+                android:id="@+id/button_about"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:layout_weight="1"
+                android:background="@drawable/background_small_pressed"
+                android:text="@string/about"
+                android:textAllCaps="false"
+                android:textColor="?attr/textcolor_calculator" />
+
         </TableRow>
     </TableLayout>
 
@@ -282,7 +348,7 @@
         app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline_3_1">
+        app:layout_constraintTop_toBottomOf="@id/guideline_3_2">
 
         <Button
             android:id="@+id/button_clear"

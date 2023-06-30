@@ -14,7 +14,7 @@
     <string name="equals">=</string>
     <string name="bracketleft">(</string>
     <string name="bracketright">)</string>
-    <string name="bracket">( )</string>
+    <string name="bracket">(  )</string>
     <string name="percent">%</string>
     <string name="divide">÷</string>
     <string name="multiply">×</string>
@@ -33,4 +33,9 @@
     <string name="two">2</string>
     <string name="three">3</string>
     <string name="history">History</string>
+    <string name="warning">Math Error !!!</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="copy">Copy</string>
+    <string name="about">About</string>
 </resources>

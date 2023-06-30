@@ -32,4 +32,6 @@
     <color name="background_operator_night" tools:targetApi="s">@android:color/system_accent1_800</color>
     <color name="background_operator_pressed_night" tools:targetApi="s">@android:color/system_accent1_600</color>
     <color name="background_operator_small_pressed_night" tools:targetApi="s">@android:color/system_accent1_700</color>
+
+    <color name="warning_color">#F44336</color>
 </resources>

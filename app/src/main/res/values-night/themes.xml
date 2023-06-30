@@ -38,4 +38,13 @@
         <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
         <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
     </style>
+    <style name="MyAboutTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/background_history</item>
+        <item name="android:textColor">?attr/textcolor_calculator</item>
+        <item name="android:colorAccent">?attr/textcolor_calculator</item>
+        <item name="android:textColorPrimary">?attr/textcolor_calculator</item>
+        <item name="colorAccent">?attr/textcolor_calculator</item>
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
 </resources>
