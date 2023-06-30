@@ -3,6 +3,8 @@ package com.ttt.calculator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -22,8 +24,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableRow;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Guideline;
@@ -44,6 +48,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private long mPressDuration;//按压时常
     private long mPressTime;//开始按压的时间
     private boolean mShowFlag = false;//是否显示更多按键
+    private TableRow mOperatorRow3;
     private TableRow mOperatorRow2;//默认隐藏的小按键所在位置
     private StringBuilder mInputText;//记录输入内容
     private int mBracketStatus = 0;//记录括号状态
@@ -51,8 +56,14 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     public static final String TOO_LARGE = "Infinity";//过大提醒
     private boolean canCalculate;//检测是否可以运算
     private StringBuilder mSavedText;//点击等号后记录之前输入的内容
-    private SharedPreferences sharedPreferences;
-    private Button mHistoryButton;
+    private SharedPreferences mHistoryPreferences;//记录历史记录和主题
+    private SharedPreferences mThemePreferences;
+    private Button mHistoryButton;//历史记录按键
+    private Button mThemeButton;//主题切换按键
+    private Button mCopyButton;//复制按键
+    private Button mAboutButton;//关于按键
+    private boolean isDarkThemeOn;//记录系统主题
+    private boolean mCurrentTheme;//记录当前应用主题
 
     @SuppressLint({"ClickableViewAccessibility", "MissingInflatedId"})
     @Override
@@ -61,13 +72,19 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_calculator);
         mInputView = findViewById(R.id.input_edit);
         mResultView = findViewById(R.id.result_edit);
-        mGuideline1 = findViewById(R.id.guideline_3_1);
+        mGuideline1 = findViewById(R.id.guideline_3_2);
         mClearButton = findViewById(R.id.button_clear);
         mEqualsButton = findViewById(R.id.button_equals);
         mDeleteButton = findViewById(R.id.button_delete);
         mOperatorRow2 = findViewById(R.id.operator_row_2);
+        mOperatorRow3 = findViewById(R.id.operator_row_3);
         mHistoryButton = findViewById(R.id.button_history);
-        sharedPreferences = getSharedPreferences("history", Context.MODE_PRIVATE);
+        mThemeButton = findViewById(R.id.button_theme);
+        mCopyButton = findViewById(R.id.button_copy);
+        mAboutButton = findViewById(R.id.button_about);
+        mHistoryPreferences = getSharedPreferences("history", Context.MODE_PRIVATE);
+        mThemePreferences = getSharedPreferences("themes", Context.MODE_PRIVATE);
+        isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
         mSmallButton = new Button[]{
                 findViewById(R.id.button_root),
                 findViewById(R.id.button_pi),
@@ -101,6 +118,15 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         };
         mHistoryButton.setOnTouchListener(this);
         mHistoryButton.setOnClickListener(this);
+        mThemeButton.setOnTouchListener(this);
+        mCopyButton.setOnTouchListener(this);
+        mCopyButton.setOnClickListener(this);
+        mAboutButton.setOnTouchListener(this);
+        aboutMethod();
+        copyResultMethod();
+        getMyTheme();
+        setThemeFollowSystem();
+        setMyTheme();
         moreButtonMethod();
         overStatusBar();
         setSingleLines();
@@ -129,11 +155,106 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
 
     }
 
+    private void getMyTheme() {//获取保存的主题
+        SharedPreferences getTheme = getSharedPreferences("themes", MODE_PRIVATE);
+        String savedTheme = getTheme.getString("theme", "");
+        switch (savedTheme) {
+            case "system":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                boolean currentTheme = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+                if (currentTheme) {
+                    mThemeButton.setText(getString(R.string.theme_dark));
+                    mCurrentTheme = true;
+                } else {
+                    mThemeButton.setText(getString(R.string.theme_light));
+                    mCurrentTheme = false;
+                }
+                break;
+            case "light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                mThemeButton.setText(getString(R.string.theme_light));
+                mCurrentTheme = false;
+                break;
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                mThemeButton.setText(getString(R.string.theme_dark));
+                mCurrentTheme = true;
+                break;
+            default:
+                if (isDarkThemeOn) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    mThemeButton.setText(getString(R.string.theme_dark));
+                    mCurrentTheme = true;
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    mThemeButton.setText(getString(R.string.theme_light));
+                    mCurrentTheme = false;
+                }
+                break;
+        }
+
+    }
+
+    private void setThemeFollowSystem() {//设置主题跟随系统
+        mThemeButton.setOnLongClickListener(view -> {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            SharedPreferences.Editor editor = mThemePreferences.edit();
+            editor.putString("theme", "system");
+            editor.apply();
+            mThemePreferences.edit().apply();
+            return true;
+        });
+    }
+
+    private void aboutMethod() {//关于
+        mAboutButton.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(CalculatorActivity.this, R.style.MyAboutTheme);
+            builder.setTitle(getString(R.string.about));
+            builder.setMessage("Github:" + "\n" + "\n" + "https://github.com/TenzinJamyangZHS/Calculator");
+            AlertDialog dialog = builder.create();
+            dialog.getWindow().getAttributes().windowAnimations = R.style.MyAboutTheme;
+            dialog.show();
+        });
+    }
+
+    private void copyResultMethod() {//长按复制按键复制结果栏
+        mCopyButton.setOnLongClickListener(view -> {
+            if (mResultView.length() > 0) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("result", mResultView.getText().toString());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(CalculatorActivity.this, "Result Copied", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        });
+    }
+
+    private void setMyTheme() {//切换主题
+        SharedPreferences.Editor editor = mThemePreferences.edit();
+        mThemeButton.setOnClickListener(view -> {
+            String saveTheme;
+            if (mCurrentTheme) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                mThemeButton.setText(getString(R.string.theme_light));
+                saveTheme = "light";
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                mThemeButton.setText(getString(R.string.theme_dark));
+                saveTheme = "dark";
+            }
+            editor.putString("theme", saveTheme);
+            editor.apply();
+            mThemePreferences.edit().apply();
+        });
+
+
+    }
+
     private void showHistory() {//显示历史记录
         String title = "History";
         AlertDialog.Builder builder = new AlertDialog.Builder(CalculatorActivity.this, R.style.MyDialogTheme);
         builder.setTitle(title);
-        Map<String, ?> allHistory = sharedPreferences.getAll();//获取历史列表
+        Map<String, ?> allHistory = mHistoryPreferences.getAll();//获取历史列表
         Iterator<? extends Entry<String, ?>> iterator = allHistory.entrySet().iterator();
         ArrayList<String> historyList = new ArrayList<>();
         ArrayList<Long> keyList = new ArrayList<>();
@@ -157,15 +278,14 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         ScrollView scrollView = new ScrollView(new ContextThemeWrapper(CalculatorActivity.this, R.style.MyDialogTheme));
         scrollView.setFillViewport(true);
         EditText mHistoryView = new EditText(new ContextThemeWrapper(CalculatorActivity.this, R.style.MyDialogTheme));
-        mHistoryView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
+        mHistoryView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         scrollView.addView(mHistoryView);
         mHistoryView.setPadding(40, 40, 40, 40);
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mHistoryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
-        } else if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_LANDSCAPE){
+        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mHistoryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
         }
-
         mHistoryView.setText(showHistory);
         mHistoryView.setBackground(null);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -179,13 +299,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         builder.setView(scrollView);
         builder.setNegativeButton("Clear", (dialog, which) -> {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
+            SharedPreferences.Editor editor = mHistoryPreferences.edit();
             editor.clear();
             editor.apply();
             dialog.dismiss();
         });
         builder.setCancelable(true);
-        AlertDialog dialog =builder.create();
+        AlertDialog dialog = builder.create();
         dialog.getWindow().getAttributes().windowAnimations = R.style.MyDialogTheme;
         dialog.show();
 
@@ -208,11 +328,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             mMoreButton.setOnClickListener(new View.OnClickListener() {//操作显示更多按键
                 final ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) mGuideline1.getLayoutParams();
                 ValueAnimator valueAnimator;
+
                 @Override
                 public void onClick(View v) {//重新设置guideline位置以显示或隐藏更多的按键
                     if (!mShowFlag) {
-                        valueAnimator = ValueAnimator.ofFloat(0.4f, 0.47f);
-                        valueAnimator.setDuration(250);
+                        valueAnimator = ValueAnimator.ofFloat(0.4f, 0.54f);
+                        valueAnimator.setDuration(300);
                         valueAnimator.setInterpolator(new AnticipateOvershootInterpolator());
                         valueAnimator.addUpdateListener(animation -> {
                             lp.guidePercent = (float) valueAnimator.getAnimatedValue();
@@ -221,10 +342,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                         valueAnimator.start();
                         mMoreButton.setText(R.string.more_up);
                         mOperatorRow2.setVisibility(View.VISIBLE);
+                        mOperatorRow3.setVisibility(View.VISIBLE);
                         mShowFlag = true;
                     } else {
-                        valueAnimator = ValueAnimator.ofFloat(0.47f, 0.4f);
-                        valueAnimator.setDuration(250);
+                        valueAnimator = ValueAnimator.ofFloat(0.54f, 0.4f);
+                        valueAnimator.setDuration(300);
                         valueAnimator.setInterpolator(new AnticipateOvershootInterpolator());
                         valueAnimator.addUpdateListener(animation -> {
                             lp.guidePercent = (float) valueAnimator.getAnimatedValue();
@@ -233,6 +355,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                         valueAnimator.start();
                         mMoreButton.setText(R.string.more_down);
                         mOperatorRow2.setVisibility(View.GONE);
+                        mOperatorRow3.setVisibility(View.GONE);
                         mShowFlag = false;
                     }
                 }
@@ -280,11 +403,14 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                     }
                 }
             });
-            mHistoryButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 50));
+            mHistoryButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 60));
             mMoreButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 80));
             mClearButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
             mEqualsButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
             mDeleteButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
+            mThemeButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 60));
+            mCopyButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 60));
+            mAboutButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 60));
             for (Button button : mOperatorButton) {
                 button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
             }
@@ -307,7 +433,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             for (Button button : mSmallButton) {
                 button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
             }
-            mHistoryButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 40));
+            mHistoryButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
+            mThemeButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
+            mCopyButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
+            mAboutButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
+            mHistoryButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
             mClearButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
             mEqualsButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
             mDeleteButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
@@ -364,6 +494,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         //输入左括号时，mBracketStatus自增，输入右括号时，其自减，以此判断括号是否完整。
         if (inputOk) {//确保相邻内容不违规时
             switch (buttonString) {
+                case "Copy":
+                    copyInputMethod();
+                    break;
                 case "History":
                     showHistory();
                     break;
@@ -416,6 +549,15 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             }
         }
 
+    }
+
+    private void copyInputMethod() {//单击复制按键复制输入框内容
+        if (mInputView.length() > 0) {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("input", mInputView.getText().toString());
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(this, "Input Copied", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /*部分规则---*/
@@ -898,7 +1040,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         updateResultView();
     }
 
-    private boolean zeroPoint() {
+    private boolean zeroPoint() {//处理小数点问题
         boolean hasPoint = false;
         for (int i = mCursorPosition; i < mInputText.length(); i++) {
             if (numberPoint(String.valueOf(mInputText), i)) {
@@ -911,7 +1053,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         return hasPoint;
     }
 
-    private boolean zeroBefore() {
+    private boolean zeroBefore() {//处理小数点问题
         boolean zeroOK = true;
         if (!numberPoint(String.valueOf(mInputText), mCursorPosition - 1)) {
             for (int i = mCursorPosition - 1; i >= 0; i--) {
@@ -951,14 +1093,14 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             mInputView.setText(mResultView.getText().toString());//把结果显示到输入框
             mInputView.setSelection(mInputView.getText().toString().length());
         }
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = mHistoryPreferences.edit();
         Date date = new Date();
         String sTime = String.valueOf(date.getTime());
         if (mResultView.getText().length() > 0) {
             String sInputText = mInputText.toString() + "=" + mResultView.getText().toString();
             editor.putString(sTime, sInputText);
             editor.apply();
-            sharedPreferences.edit().apply();
+            mHistoryPreferences.edit().apply();
         }
     }
 
@@ -1044,6 +1186,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         canCalculated(inputList);
         if (canCalculate) {//若运算完成 则集合内容剩余唯一
+            if (isDarkThemeOn) {
+                mResultView.setTextColor(getColor(R.color.textcolor_calculator_night));
+            } else {
+                mResultView.setTextColor(getColor(R.color.textcolor_calculator));
+            }
             if (inputList.size() == 1) {
                 mResultView.setText(inputList.get(0));
             } else if (inputList.size() == 0) {
@@ -1052,9 +1199,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         } else {
             //不能完成计算的提醒
             //运算错误提示
-            String WARNING = "Math Error !!!";
-            mResultView.setText(WARNING);
+            mResultView.setText(getString(R.string.warning));
+            mResultView.setTextColor(getColor(R.color.warning_color));
         }
+
     }
 
     private void removeZero(ArrayList<String> inputList) {
