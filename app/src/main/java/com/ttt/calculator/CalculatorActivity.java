@@ -16,7 +16,7 @@ import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.BounceInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -61,7 +61,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_calculator);
         mInputView = findViewById(R.id.input_edit);
         mResultView = findViewById(R.id.result_edit);
-        mGuideline1 = findViewById(R.id.guideline_3);
+        mGuideline1 = findViewById(R.id.guideline_3_1);
         mClearButton = findViewById(R.id.button_clear);
         mEqualsButton = findViewById(R.id.button_equals);
         mDeleteButton = findViewById(R.id.button_delete);
@@ -160,7 +160,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         mHistoryView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
         scrollView.addView(mHistoryView);
         mHistoryView.setPadding(40, 40, 40, 40);
-        mHistoryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            mHistoryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
+        } else if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_LANDSCAPE){
+            mHistoryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
+        }
+
         mHistoryView.setText(showHistory);
         mHistoryView.setBackground(null);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -202,13 +207,13 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             });
             mMoreButton.setOnClickListener(new View.OnClickListener() {//操作显示更多按键
                 final ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) mGuideline1.getLayoutParams();
-
+                ValueAnimator valueAnimator;
                 @Override
                 public void onClick(View v) {//重新设置guideline位置以显示或隐藏更多的按键
                     if (!mShowFlag) {
-                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.39f, 0.45f);
-                        valueAnimator.setDuration(200);
-                        valueAnimator.setInterpolator(new BounceInterpolator());
+                        valueAnimator = ValueAnimator.ofFloat(0.4f, 0.47f);
+                        valueAnimator.setDuration(250);
+                        valueAnimator.setInterpolator(new AnticipateOvershootInterpolator());
                         valueAnimator.addUpdateListener(animation -> {
                             lp.guidePercent = (float) valueAnimator.getAnimatedValue();
                             mGuideline1.setLayoutParams(lp);
@@ -218,9 +223,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                         mOperatorRow2.setVisibility(View.VISIBLE);
                         mShowFlag = true;
                     } else {
-                        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.45f, 0.39f);
-                        valueAnimator.setDuration(200);
-                        valueAnimator.setInterpolator(new BounceInterpolator());
+                        valueAnimator = ValueAnimator.ofFloat(0.47f, 0.4f);
+                        valueAnimator.setDuration(250);
+                        valueAnimator.setInterpolator(new AnticipateOvershootInterpolator());
                         valueAnimator.addUpdateListener(animation -> {
                             lp.guidePercent = (float) valueAnimator.getAnimatedValue();
                             mGuideline1.setLayoutParams(lp);
@@ -241,10 +246,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         int widthScreen = displayMetrics.widthPixels;
-        int inputLength = widthScreen / (height / 15);
-        mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 8));
-        mResultView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 20));
+        int inputLength = widthScreen / (height / 14);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 8));
+            mResultView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 20));
             mInputView.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -287,10 +292,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 25));
             }
             for (Button button : mSmallButton) {
-                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 40));
             }
         }
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mInputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 12));
+            mResultView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 20));
             for (Button button : mOperatorButton) {
                 button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
             }
@@ -298,7 +305,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));
             }
             for (Button button : mSmallButton) {
-                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 20));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
             }
             mHistoryButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 40));
             mClearButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 15));

@@ -14,20 +14,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.20" />
+        app:layout_constraintGuide_percent="0.18" />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.82" />
+        app:layout_constraintGuide_percent="0.80" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.28" />
+        app:layout_constraintGuide_percent="0.26" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_3"
@@ -66,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.82"/>
+        app:layout_constraintGuide_percent="0.80"/>
 
     <HorizontalScrollView
         android:id="@+id/input_scroll"
@@ -86,6 +86,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end|bottom"
             android:background="@null"
+            android:typeface="monospace"
             android:gravity="bottom"
             android:importantForAutofill="no"
             android:inputType="textNoSuggestions"
@@ -115,6 +116,7 @@
             android:layout_gravity="end|bottom"
             android:background="@null"
             android:gravity="bottom"
+            android:typeface="monospace"
             android:importantForAutofill="no"
             android:inputType="textNoSuggestions"
             android:minWidth="48dp"
@@ -174,11 +176,10 @@
 
     <Button
         android:id="@+id/button_factorial"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toStartOf="@id/button_sin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/button_pow"
-        
         android:layout_width="0dp"
         android:background="@drawable/background_small_pressed"
         android:layout_height="0dp"
@@ -246,7 +247,7 @@
         android:text="@string/sin"
         android:textAllCaps="false"
         android:textColor="?attr/textcolor_calculator"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toStartOf="@id/button_history"
         app:layout_constraintStart_toEndOf="@id/button_factorial"
         app:layout_constraintTop_toBottomOf="@id/button_cos" />
@@ -260,7 +261,7 @@
         android:text="@string/history"
         android:textAllCaps="false"
         android:textColor="?attr/textcolor_calculator"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toStartOf="@id/guideline_3"
         app:layout_constraintStart_toEndOf="@id/button_sin"
         app:layout_constraintTop_toBottomOf="@id/guideline_7" />
@@ -453,7 +454,7 @@
         android:layout_margin="@dimen/margin_big"
         android:text="@string/plus"
         android:textColor="?attr/textcolor_calculator"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_5"
         android:background="@drawable/background_operator_rp"
         app:layout_constraintEnd_toStartOf="@id/button_equals"
         app:layout_constraintStart_toEndOf="@id/guideline_4"
@@ -466,7 +467,7 @@
         android:textColor="?attr/textcolor_calculator"
         android:background="@drawable/background_number_rp"
         android:layout_margin="@dimen/margin_big"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toStartOf="@id/guideline_3_1"
         app:layout_constraintStart_toEndOf="@id/guideline_3"
         app:layout_constraintTop_toBottomOf="@id/button_one"/>
@@ -478,7 +479,7 @@
         android:layout_margin="@dimen/margin_big"
         android:textColor="?attr/textcolor_calculator"
         android:background="@drawable/background_number_rp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toStartOf="@id/guideline_3_2"
         app:layout_constraintStart_toEndOf="@id/guideline_3_1"
         app:layout_constraintTop_toBottomOf="@id/button_two"/>
@@ -490,7 +491,7 @@
         android:layout_height="0dp"
         android:background="@drawable/background_number_rp"
         android:layout_margin="@dimen/margin_big"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toStartOf="@id/guideline_4"
         app:layout_constraintStart_toEndOf="@id/guideline_3_2"
         app:layout_constraintTop_toBottomOf="@id/button_three"/>
@@ -500,10 +501,9 @@
         android:layout_height="0dp"
         android:textColor="?attr/textcolor_calculator"
         android:layout_margin="@dimen/margin_big"
-        
         android:text="@string/equals"
         android:background="@drawable/background_equals_rp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/button_plus"
         app:layout_constraintTop_toBottomOf="@id/button_percent"/>

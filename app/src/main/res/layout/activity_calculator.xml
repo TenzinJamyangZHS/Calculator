@@ -27,7 +27,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.39" />
+        app:layout_constraintGuide_percent="0.4" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_3_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_more"
@@ -41,14 +47,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.45" />
+        app:layout_constraintGuide_percent="0.47" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.98" />
+        app:layout_constraintGuide_percent="0.97" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_6"
@@ -75,6 +81,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:gravity="bottom"
+            android:typeface="monospace"
             android:background="@null"
             android:importantForAutofill="no"
             android:inputType="textNoSuggestions"
@@ -104,6 +111,7 @@
             android:background="@null"
             android:importantForAutofill="no"
             android:inputType="textNoSuggestions"
+            android:typeface="monospace"
             android:paddingHorizontal="16dp"
             android:textColor="?attr/textcolor_calculator"
             tools:ignore="LabelFor,SpeakableTextPresentCheck" />
@@ -116,13 +124,15 @@
         app:layout_constraintBottom_toTopOf="@id/guideline_3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline_2">
+        app:layout_constraintTop_toBottomOf="@id/guideline_2"
+        android:layout_marginVertical="@dimen/margin_big">
 
         <TableRow
             android:id="@+id/operator_row_1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0">
+            android:layout_weight="1"
+            tools:ignore="UselessParent">
 
             <Button
                 android:id="@+id/button_root"
@@ -184,13 +194,24 @@
                 android:textAllCaps="false"
                 android:textColor="?attr/textcolor_calculator"/>
         </TableRow>
+    </TableLayout>
+    <TableLayout
+        android:id="@+id/operator_tablelayout2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/guideline_3_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_3"
+        android:layout_marginVertical="@dimen/margin_big">
 
         <TableRow
             android:id="@+id/operator_row_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:visibility="gone">
+            android:layout_weight="1"
+            android:visibility="gone"
+            tools:ignore="UselessParent">
 
             <Button
                 android:id="@+id/button_log"
@@ -252,7 +273,6 @@
                 android:textAllCaps="false"
                 android:textColor="?attr/textcolor_calculator" />
         </TableRow>
-
     </TableLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -262,7 +282,7 @@
         app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline_3">
+        app:layout_constraintTop_toBottomOf="@id/guideline_3_1">
 
         <Button
             android:id="@+id/button_clear"
