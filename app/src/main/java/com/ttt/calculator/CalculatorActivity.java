@@ -16,12 +16,15 @@ import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Guideline;
 
@@ -130,7 +133,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         String title = "History";
         AlertDialog.Builder builder = new AlertDialog.Builder(CalculatorActivity.this, R.style.MyDialogTheme);
         builder.setTitle(title);
-        Map<String, ?> allHistory = sharedPreferences.getAll();
+        Map<String, ?> allHistory = sharedPreferences.getAll();//获取历史列表
         Iterator<? extends Entry<String, ?>> iterator = allHistory.entrySet().iterator();
         ArrayList<String> historyList = new ArrayList<>();
         ArrayList<Long> keyList = new ArrayList<>();
@@ -146,12 +149,16 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         }
         StringBuilder showHistory = new StringBuilder();
         for (int i = 0; i < historyList.size(); i++) {
-            showHistory.append(historyList.get(i)).append("\n" + "\n");
+            showHistory.append(historyList.get(i)).append("\n" + "\n");//把历史内容按顺序添加到字符串
         }
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels;
-        EditText mHistoryView = new EditText(CalculatorActivity.this);
+        int height = displayMetrics.heightPixels;//获取屏幕尺寸来确定字体大小
+        ScrollView scrollView = new ScrollView(new ContextThemeWrapper(CalculatorActivity.this, R.style.MyDialogTheme));
+        scrollView.setFillViewport(true);
+        EditText mHistoryView = new EditText(new ContextThemeWrapper(CalculatorActivity.this, R.style.MyDialogTheme));
+        mHistoryView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
+        scrollView.addView(mHistoryView);
         mHistoryView.setPadding(40, 40, 40, 40);
         mHistoryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / 30));
         mHistoryView.setText(showHistory);
@@ -165,8 +172,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         } catch (Exception e) {
             e.printStackTrace();
         }
-//            mHistoryView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        builder.setView(mHistoryView);
+        builder.setView(scrollView);
         builder.setNegativeButton("Clear", (dialog, which) -> {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
@@ -174,7 +180,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             dialog.dismiss();
         });
         builder.setCancelable(true);
-        builder.show();
+        AlertDialog dialog =builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = R.style.MyDialogTheme;
+        dialog.show();
 
     }
 
@@ -200,9 +208,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                     if (!mShowFlag) {
                         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.39f, 0.45f);
                         valueAnimator.setDuration(200);
-                        for (int i = 0; i < 50; i++) {
-                            valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                        }
+                        valueAnimator.setInterpolator(new BounceInterpolator());
                         valueAnimator.addUpdateListener(animation -> {
                             lp.guidePercent = (float) valueAnimator.getAnimatedValue();
                             mGuideline1.setLayoutParams(lp);
@@ -214,7 +220,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                     } else {
                         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.45f, 0.39f);
                         valueAnimator.setDuration(200);
-                        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        valueAnimator.setInterpolator(new BounceInterpolator());
                         valueAnimator.addUpdateListener(animation -> {
                             lp.guidePercent = (float) valueAnimator.getAnimatedValue();
                             mGuideline1.setLayoutParams(lp);
@@ -941,10 +947,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Date date = new Date();
         String sTime = String.valueOf(date.getTime());
-        String sInputText = mInputText.toString() + "=" + mResultView.getText().toString();
-        editor.putString(sTime, sInputText);
-        editor.apply();
-        sharedPreferences.edit().apply();
+        if (mResultView.getText().length() > 0) {
+            String sInputText = mInputText.toString() + "=" + mResultView.getText().toString();
+            editor.putString(sTime, sInputText);
+            editor.apply();
+            sharedPreferences.edit().apply();
+        }
     }
 
     private void updateResultView() {

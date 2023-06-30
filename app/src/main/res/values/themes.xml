@@ -34,5 +34,8 @@
         <item name="android:textColor">?attr/textcolor_calculator</item>
         <item name="android:colorAccent">?attr/textcolor_calculator</item>
         <item name="android:textColorPrimary">?attr/textcolor_calculator</item>
+        <item name="colorAccent">?attr/textcolor_calculator</item>
+        <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
     </style>
 </resources>

@@ -25,7 +25,7 @@ android {
             variant ->
                 variant.outputs.each {
                     output ->
-                        def name = "Calendar-release.apk"
+                        def name = "Calculator-release.apk"
                         output.outputFileName = name
                 }
         }
