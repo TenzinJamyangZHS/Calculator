@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="textcolor_calculator">@android:color/system_accent3_800</color>
+    <color name="background_calculator">@android:color/system_accent2_10</color>
+    <color name="textcolor_calculator_night">@android:color/system_accent3_50</color>
+    <color name="background_edit">@android:color/system_accent2_100</color>
+    <color name="background_number">@android:color/system_accent2_50</color>
+    <color name="background_number_pressed">@android:color/system_accent2_200</color>
+    <color name="background_clear">@android:color/system_accent3_200</color>
+    <color name="background_clear_pressed">@android:color/system_accent3_400</color>
+    <color name="background_equals">@android:color/system_accent1_200</color>
+    <color name="background_equals_pressed">@android:color/system_accent1_400</color>
+    <color name="background_operator">@android:color/system_accent1_100</color>
+    <color name="background_operator_pressed">@android:color/system_accent1_300</color>
+    <color name="background_operator_small_pressed">@android:color/system_accent1_300</color>
+    <color name="background_calculator_night">@android:color/system_accent2_1000</color>
+    <color name="background_edit_night">@android:color/system_accent2_900</color>
+    <color name="background_number_night">@android:color/system_accent2_900</color>
+    <color name="background_number_pressed_night">@android:color/system_accent2_700</color>
+    <color name="background_clear_night">@android:color/system_accent3_700</color>
+    <color name="background_clear_pressed_night">@android:color/system_accent3_500</color>
+    <color name="background_equals_night">@android:color/system_accent1_700</color>
+    <color name="background_equals_pressed_night">@android:color/system_accent1_500</color>
+    <color name="background_operator_night">@android:color/system_accent1_800</color>
+    <color name="background_operator_pressed_night">@android:color/system_accent1_600</color>
+    <color name="background_operator_small_pressed_night">@android:color/system_accent1_700</color>
+</resources>
