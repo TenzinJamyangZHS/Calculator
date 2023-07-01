@@ -45,21 +45,21 @@ public class MyMath {
 
     public static String myTan(String s) {
         double result = Double.parseDouble(mySin(s)) / Double.parseDouble(myCos(s));
-        String resuls = String.valueOf(result);
-        if (resuls.length() >= 16) {
-            resuls = resuls.substring(0, 15);
-            result = Double.parseDouble(resuls);
-            resuls = String.valueOf(result);
+        String results = String.valueOf(result);
+        if (results.length() >= 16) {
+            results = results.substring(0, 15);
+            result = Double.parseDouble(results);
+            results = String.valueOf(result);
         }
-        return resuls;
+        return results;
 
     }
 
     public static String myCos(String s) {
         double db = Double.parseDouble(s);
         double result = Math.sqrt(1 - Math.pow(Math.sin(Math.toRadians(db)), 2));
-        String resuls = String.valueOf(result);
-        if (resuls.length() >= 16) {
+        String results = String.valueOf(result);
+        if (results.length() >= 16) {
             return String.valueOf(result).substring(0, 15);
         } else {
             return String.valueOf(result);
@@ -75,8 +75,8 @@ public class MyMath {
         } else {
             result = Math.sin(Math.toRadians(db));
         }
-        String resuls = String.valueOf(result);
-        if (resuls.length() >= 16) {
+        String results = String.valueOf(result);
+        if (results.length() >= 16) {
             return String.valueOf(result).substring(0, 15);
         } else {
             return String.valueOf(result);
