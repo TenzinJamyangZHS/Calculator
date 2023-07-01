@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId "com.ttt.calculator"
-        minSdk 28
+        minSdk 24
         targetSdk 34
         versionCode 1
-        versionName "1.2"
+        versionName "1.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
