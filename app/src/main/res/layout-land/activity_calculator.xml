@@ -60,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.98" />
+        app:layout_constraintGuide_percent="0.95" />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_6"
         android:layout_width="wrap_content"
@@ -197,111 +197,118 @@
 
     <Button
         android:id="@+id/button_root"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/background_small_pressed"
+        android:text="@string/root"
+        android:textAllCaps="false"
+        android:textColor="?attr/textcolor_calculator"
         app:layout_constraintBottom_toTopOf="@id/button_pi"
         app:layout_constraintEnd_toStartOf="@id/button_log"
         app:layout_constraintStart_toEndOf="@id/guideline_8"
         app:layout_constraintTop_toBottomOf="@id/guideline_2"
-        android:layout_width="0dp"
-        android:layout_margin="@dimen/margin_small"
-        android:background="@drawable/background_small_pressed"
-        android:layout_height="0dp"
-        android:text="@string/root"
-        android:textColor="?attr/textcolor_calculator"
-        android:textAllCaps="false"
-        style="?android:attr/buttonBarButtonStyle" />
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
         android:id="@+id/button_pi"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/background_small_pressed"
+        android:text="@string/pi"
+        android:textAllCaps="false"
+        android:textColor="?attr/textcolor_calculator"
         app:layout_constraintBottom_toTopOf="@id/button_pow"
         app:layout_constraintEnd_toStartOf="@id/button_tan"
         app:layout_constraintStart_toEndOf="@id/guideline_8"
         app:layout_constraintTop_toBottomOf="@id/button_root"
-        android:layout_width="0dp"
-        android:background="@drawable/background_small_pressed"
-        android:layout_height="0dp"
-        android:layout_margin="@dimen/margin_small"
-        android:text="@string/pi"
-        android:textColor="?attr/textcolor_calculator"
-        android:textAllCaps="false"
-        style="?android:attr/buttonBarButtonStyle" />
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
+        android:id="@+id/button_pow"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/background_small_pressed"
+        android:text="@string/pow"
+        android:textAllCaps="false"
+        android:textColor="?attr/textcolor_calculator"
         app:layout_constraintBottom_toTopOf="@id/button_factorial"
         app:layout_constraintEnd_toStartOf="@id/button_cos"
         app:layout_constraintStart_toEndOf="@id/guideline_8"
         app:layout_constraintTop_toBottomOf="@id/button_pi"
-        android:id="@+id/button_pow"
-        android:background="@drawable/background_small_pressed"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="@dimen/margin_small"
-        android:text="@string/pow"
-        android:textColor="?attr/textcolor_calculator"
-        android:textAllCaps="false"
-        style="?android:attr/buttonBarButtonStyle" />
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
         android:id="@+id/button_factorial"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/background_small_pressed"
+        android:text="@string/factorial"
+        android:textAllCaps="false"
+        android:textColor="?attr/textcolor_calculator"
         app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toStartOf="@id/button_sin"
         app:layout_constraintStart_toEndOf="@id/guideline_8"
         app:layout_constraintTop_toBottomOf="@id/button_pow"
-        android:layout_width="0dp"
-        android:background="@drawable/background_small_pressed"
-        android:layout_height="0dp"
-        android:layout_margin="@dimen/margin_small"
-        android:text="@string/factorial"
-        android:textColor="?attr/textcolor_calculator"
-        android:textAllCaps="false"
-        style="?android:attr/buttonBarButtonStyle" />
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
         android:id="@+id/button_log"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/background_small_pressed"
+
+        android:text="@string/log"
+        android:textAllCaps="false"
+        android:textColor="?attr/textcolor_calculator"
         app:layout_constraintBottom_toTopOf="@id/button_tan"
         app:layout_constraintEnd_toStartOf="@id/guideline_3"
         app:layout_constraintStart_toEndOf="@id/button_root"
         app:layout_constraintTop_toBottomOf="@id/guideline_2"
-        android:layout_width="0dp"
-        
-        android:background="@drawable/background_small_pressed"
-        android:layout_height="0dp"
-        android:textColor="?attr/textcolor_calculator"
-        android:layout_margin="@dimen/margin_small"
-        android:text="@string/log"
-        android:textAllCaps="false"
-        style="?android:attr/buttonBarButtonStyle" />
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
         android:id="@+id/button_tan"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/background_small_pressed"
+        android:text="@string/tan"
+        android:textAllCaps="false"
+
+        android:textColor="?attr/textcolor_calculator"
         app:layout_constraintBottom_toTopOf="@id/button_cos"
         app:layout_constraintEnd_toStartOf="@id/guideline_3"
         app:layout_constraintStart_toEndOf="@id/button_pi"
         app:layout_constraintTop_toBottomOf="@id/button_log"
-        android:background="@drawable/background_small_pressed"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        
-        android:layout_margin="@dimen/margin_small"
-        android:textColor="?attr/textcolor_calculator"
-        android:text="@string/tan"
-        android:textAllCaps="false"
-        style="?android:attr/buttonBarButtonStyle" />
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
         android:id="@+id/button_cos"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/background_small_pressed"
+        android:text="@string/cos"
+
+        android:textAllCaps="false"
+        android:textColor="?attr/textcolor_calculator"
         app:layout_constraintBottom_toTopOf="@id/button_sin"
         app:layout_constraintEnd_toStartOf="@id/guideline_3"
         app:layout_constraintStart_toEndOf="@id/button_pow"
         app:layout_constraintTop_toBottomOf="@id/button_tan"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        
-        android:layout_margin="@dimen/margin_small"
-        android:textColor="?attr/textcolor_calculator"
-        android:background="@drawable/background_small_pressed"
-        android:text="@string/cos"
-        android:textAllCaps="false"
-        style="?android:attr/buttonBarButtonStyle" />
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
         android:id="@+id/button_sin"
@@ -316,7 +323,8 @@
         app:layout_constraintBottom_toTopOf="@id/guideline_5"
         app:layout_constraintEnd_toStartOf="@id/guideline_3"
         app:layout_constraintStart_toEndOf="@id/button_factorial"
-        app:layout_constraintTop_toBottomOf="@id/button_cos" />
+        app:layout_constraintTop_toBottomOf="@id/button_cos"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
         android:id="@+id/button_clear"
