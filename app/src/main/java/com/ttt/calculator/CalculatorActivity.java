@@ -8,7 +8,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -128,7 +127,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         setThemeFollowSystem();
         setMyTheme();
         moreButtonMethod();
-        overStatusBar();
+//        overStatusBar();
         setSingleLines();
         hideInput();
         setMyTestSize();
@@ -469,9 +468,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-        }
+        getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
 
     }
     /*---设置字体沉浸状态栏隐藏输入法一行显示*/
@@ -1625,7 +1622,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             if (indexEnd >= indexStart + 1) {//把原来集合里括号内内容删除
                 inputList.subList(indexStart + 1, indexEnd + 1).clear();
             }
-            inputList.set(indexStart, tempList.get(0));//替换为运算结果
+            if (tempList.size()==0){
+                canCalculate=false;
+            } else {
+                inputList.set(indexStart, tempList.get(0));//替换为运算结果
+            }
+
             tempList.clear();//把临时集合清空以便下一轮运算
         }
     }
